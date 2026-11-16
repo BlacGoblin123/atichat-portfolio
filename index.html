@@ -1,0 +1,1680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atichat Khanma Governance Portfolio</title>
+<meta name="description" content="Compliance and governance portfolio of Atichat Khanma: data-centre security experience, information governance study, and independent audit and risk work.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* Layout idea: a walk through a facility. Graphite rooms (the building) alternate with
+   floor-tile grey sheets (the paperwork). Hazard amber marks thresholds only. Single theme by choice. */
+:root {
+  color-scheme: dark;
+  --graphite: #111518;
+  --graphite-2: #1A2024;
+  --steel: #2C353A;
+  --tile: #E2E5E2;
+  --sheet: #F3F4F1;
+  --ink: #14181A;
+  --ink-2: #49545A;
+  --fog: #9BA7AB;
+  --chalk: #E9EDEC;
+  --amber: #F5B700;
+  --ok: #37A874;
+  --ok-ink: #1C6B48;
+  --bad: #E0523B;
+  --bad-ink: #A8301C;
+  --f-display: 'Archivo', 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif;
+  --f-body: 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif;
+  --f-mono: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace;
+  --gut: clamp(16px, 4vw, 56px);
+  --bar-h: 52px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: var(--bar-h); -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--graphite); color: var(--chalk); font-family: var(--f-body); font-size: 16px; line-height: 1.6; overflow-x: hidden; }
+body.locked { overflow: hidden; }
+h1, h2, h3, h4, p, ul, ol, figure { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+a { color: inherit; text-underline-offset: 3px; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+h1, h2, h3 { font-family: var(--f-display); font-stretch: 118%; font-weight: 800; line-height: .98; text-wrap: balance; letter-spacing: -.01em; text-transform: uppercase; }
+.mono { font-family: var(--f-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+.tnum { font-variant-numeric: tabular-nums; }
+.wrap { padding-inline: var(--gut); max-width: 1440px; margin-inline: auto; }
+.hazard { height: 10px; background: repeating-linear-gradient(-45deg, var(--amber) 0 14px, var(--ink) 14px 28px); }
+
+/* ---------- Top bar ---------- */
+.bar { position: fixed; inset: 0 0 auto 0; height: var(--bar-h); z-index: 40; display: flex; align-items: center; gap: 18px; padding-inline: var(--gut); background: rgba(17, 21, 24, .92); border-bottom: 1px solid var(--steel); }
+.bar .id { font-family: var(--f-display); font-stretch: 120%; font-weight: 800; text-transform: uppercase; text-decoration: none; white-space: nowrap; font-size: 14px; }
+.bar .id b { background: var(--amber); color: var(--ink); padding: 3px 6px; margin-right: 8px; }
+.bar nav { display: flex; gap: 2px; margin-left: auto; }
+.bar nav a { text-decoration: none; color: var(--fog); padding: 6px 6px; white-space: nowrap; }
+.bar nav a span { color: var(--amber); margin-right: 5px; }
+.bar nav a:hover, .bar nav a.on { color: var(--chalk); }
+.clock { color: var(--fog); white-space: nowrap; }
+.evbtn { border: 1px solid var(--steel); background: transparent; padding: 6px 10px; white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; }
+.evbtn i { width: 8px; height: 8px; border-radius: 50%; background: var(--steel); }
+.evbtn[aria-pressed="true"] { border-color: var(--amber); color: var(--amber); }
+.evbtn[aria-pressed="true"] i { background: var(--amber); }
+@media (max-width: 1360px) { .bar nav { display: none; } .clock { margin-left: auto; } }
+@media (max-width: 520px) { .clock { display: none; } .evbtn { margin-left: auto; } }
+
+/* ---------- Loader ---------- */
+#gate { position: fixed; inset: 0; z-index: 100; overflow: hidden; }
+#gate .leaf { position: absolute; top: 0; bottom: 0; width: 50.2%; background: var(--graphite); }
+#gate .leaf.l { left: 0; border-right: 6px solid var(--amber); }
+#gate .leaf.r { right: 0; border-left: 6px solid var(--amber); }
+#gate .leaf::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 10px; background: repeating-linear-gradient(-45deg, var(--amber) 0 14px, var(--ink) 14px 28px); }
+body.sealed main, body.sealed .bar, body.sealed footer, body.sealed .evbar { visibility: hidden; }
+#gate .leaf::before { position: absolute; top: 50%; transform: translateY(-50%); font-family: var(--f-display); font-stretch: 125%; font-weight: 900; font-size: clamp(60px, 13vw, 220px); line-height: .8; letter-spacing: -.02em; color: rgba(233, 237, 236, .045); white-space: nowrap; }
+#gate .leaf.l::before { content: "RESTR"; right: 14px; }
+#gate .leaf.r::before { content: "ICTED"; left: 14px; }
+.lock { display: inline-flex; align-items: center; gap: 8px; color: var(--bad); }
+.lock i { width: 10px; height: 10px; border-radius: 50%; background: var(--bad); box-shadow: 0 0 12px var(--bad); }
+.lock.open { color: var(--ok); } .lock.open i { background: var(--ok); box-shadow: 0 0 12px var(--ok); }
+.g-bar { height: 4px; background: var(--steel); }
+.g-bar i { display: block; height: 100%; width: 100%; background: var(--amber); transform-origin: left center; transform: scaleX(0); }
+.gate-ui { position: absolute; inset: 0; z-index: 3; display: grid; grid-template-rows: auto 1fr auto; grid-template-columns: minmax(0, 1fr); gap: 16px; padding: 18px var(--gut) 22px; }
+.g-top { display: flex; justify-content: space-between; gap: 12px; color: var(--fog); }
+.g-top b { color: var(--amber); font-weight: 500; }
+.g-mid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(20px, 4vw, 64px); align-items: end; align-self: center; }
+.g-pct { font-family: var(--f-display); font-stretch: 125%; font-weight: 900; font-size: clamp(92px, 21vw, 330px); line-height: .78; letter-spacing: -.03em; }
+.g-pct small { font-size: .26em; color: var(--amber); letter-spacing: 0; margin-left: .08em; }
+.g-status { margin-top: 18px; color: var(--amber); display: block; }
+.g-status.go { color: var(--ok); }
+.g-list { background: rgba(17, 21, 24, .92); border: 1px solid var(--steel); border-top: 0; }
+.g-list li { display: grid; grid-template-columns: 168px minmax(0, 1fr) 62px; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--steel); align-items: baseline; opacity: .32; transition: opacity .25s; }
+.g-list li:last-child { border-bottom: 0; }
+.g-list li.act { opacity: 1; }
+.g-list .ref { border: 0; padding: 0; color: var(--amber); font-size: 11.5px; white-space: normal; }
+.g-list .ref small { display: block; color: var(--fog); font-size: 10.5px; }
+.g-list .what strong { display: block; font-family: var(--f-display); font-stretch: 116%; font-weight: 800; font-size: clamp(17px, 1.7vw, 23px); line-height: 1.1; text-transform: uppercase; }
+.g-list .what small { display: block; color: var(--fog); font-size: 13.5px; line-height: 1.35; margin-top: 2px; }
+.g-list .st { text-align: right; color: var(--fog); }
+.g-list li.done .st { color: var(--ok); }
+.g-list li.note .st { color: var(--amber); }
+.ticker { overflow: hidden; border-block: 1px solid var(--steel); padding: 9px 0; white-space: nowrap; color: var(--fog); }
+.ticker-in { display: inline-block; }
+.ticker-in span { display: inline-block; padding-right: 34px; }
+.ticker-in span::after { content: "/"; color: var(--amber); padding-left: 34px; }
+.g-foot { margin-top: 12px; display: flex; justify-content: space-between; gap: 12px; align-items: center; color: var(--fog); font-size: 13px; }
+.pass { position: absolute; z-index: 4; left: 50%; top: 50%; width: min(430px, 88vw); background: var(--amber); color: var(--ink); opacity: 0; visibility: hidden; box-shadow: 0 30px 80px rgba(0, 0, 0, .6); }
+.pass-h { display: flex; justify-content: space-between; padding: 12px 18px; border-bottom: 2px solid var(--ink); }
+.pass-b { padding: 18px; }
+.pass-b strong { display: block; font-family: var(--f-display); font-stretch: 122%; font-weight: 900; font-size: clamp(34px, 7vw, 50px); line-height: .92; text-transform: uppercase; }
+.pass-b dl { margin: 16px 0 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 16px; font-size: 14.5px; }
+.pass-b dt { font-family: var(--f-mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; padding-top: 3px; }
+.pass-b dd { margin: 0; font-weight: 600; }
+.pass-bar { height: 34px; margin: 0 18px 16px; background: repeating-linear-gradient(90deg, var(--ink) 0 3px, transparent 3px 5px, var(--ink) 5px 6px, transparent 6px 10px, var(--ink) 10px 14px, transparent 14px 16px); }
+@media (max-width: 820px) { .g-mid { grid-template-columns: minmax(0, 1fr); align-items: start; } .g-list li { grid-template-columns: 96px minmax(0, 1fr) 48px; padding: 9px 12px; gap: 8px; } .g-list .what small { font-size: 12.5px; } .g-foot span { font-size: 12px; } }
+@media (max-height: 640px) { .g-pct { font-size: clamp(72px, 14vw, 160px); } .g-list li { padding: 7px 12px; } }
+
+/* ---------- Hero ---------- */
+.hero { padding-top: calc(var(--bar-h) + clamp(28px, 6vw, 72px)); padding-bottom: clamp(28px, 5vw, 56px); }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); align-items: end; }
+.hero .kicker { color: var(--amber); margin-bottom: 18px; display: block; }
+.hero h1 { font-size: clamp(44px, 9.4vw, 148px); font-weight: 900; }
+.hero h1 .ln { display: block; overflow: hidden; }
+.hero h1 .ln > span { display: block; }
+.hero .lede { margin-top: 26px; font-size: clamp(18px, 1.7vw, 23px); line-height: 1.4; max-width: 34em; }
+.hero .lede em { font-style: normal; background: var(--amber); color: var(--ink); padding: 0 5px; }
+.cam { border: 1px solid var(--steel); background: #0c0f11; position: relative; }
+.cam-v { position: relative; }
+.cam video { display: block; width: 100%; aspect-ratio: 25 / 16; object-fit: cover; }
+.cam .osd { position: absolute; inset: 0; padding: 10px 12px; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none; font-size: 11px; }
+.cam .osd div { display: flex; justify-content: space-between; gap: 10px; }
+.cam .rec::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--bad); margin-right: 6px; animation: blink 1.4s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .15; } }
+.cam figcaption { padding: 10px 12px; border-top: 1px solid var(--steel); color: var(--fog); font-size: 13px; }
+.facts { margin-top: clamp(28px, 4vw, 48px); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--steel); }
+.facts li { padding: 16px 16px 4px 0; border-right: 1px solid var(--steel); padding-left: 16px; }
+.facts li:first-child { padding-left: 0; }
+.facts li:last-child { border-right: 0; }
+.facts .mono { color: var(--fog); display: block; margin-bottom: 6px; }
+.facts strong { font-weight: 600; display: block; line-height: 1.3; }
+.facts small { color: var(--fog); font-size: 13px; }
+@media (max-width: 900px) { .hero-grid { grid-template-columns: minmax(0, 1fr); } .facts { grid-template-columns: 1fr 1fr; } .facts li { padding-left: 0; border-right: 0; border-bottom: 1px solid var(--steel); padding-bottom: 14px; } }
+@media (max-width: 480px) { .facts { grid-template-columns: 1fr; } }
+
+/* ---------- Section furniture ---------- */
+section { position: relative; }
+.sheet { background: var(--tile); color: var(--ink); }
+.sec { padding-block: clamp(56px, 8vw, 112px); }
+.sec-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(20px, 4vw, 56px); align-items: end; margin-bottom: clamp(28px, 4vw, 52px); }
+.sec-head .num { color: var(--amber); display: block; margin-bottom: 14px; }
+.sheet .sec-head .num { color: var(--ink-2); }
+.sec-head h2 { font-size: clamp(32px, 5.2vw, 76px); }
+.sec-head p { max-width: 36em; color: var(--fog); font-size: 17px; }
+.sheet .sec-head p { color: var(--ink-2); }
+@media (max-width: 800px) { .sec-head { grid-template-columns: minmax(0, 1fr); } }
+.note { font-size: 13px; color: var(--fog); border-left: 3px solid var(--amber); padding-left: 12px; max-width: 60em; }
+.sheet .note { color: var(--ink-2); }
+
+/* ---------- 01 Layers ---------- */
+#layers { background: #0c0f11; }
+.lay-inner { position: relative; padding-top: 28px; padding-bottom: 40px; }
+.plan-wrap { position: sticky; top: var(--bar-h); z-index: 3; background: #0c0f11; padding: 10px 0 8px; border-bottom: 1px solid var(--steel); }
+.plan-wrap .plan { border: 1px solid var(--steel); max-height: 46vh; width: auto; max-width: 100%; margin-inline: auto; }
+.plan-cap { color: var(--fog); margin-top: 8px; font-size: 11px; display: flex; justify-content: space-between; gap: 6px 12px; flex-wrap: wrap; }
+.plan-cap span:last-child { display: inline-flex; gap: 4px 14px; flex-wrap: wrap; }
+.plan-cap span span { white-space: nowrap; }
+.plan-cap i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; }
+.lay-side { margin-top: 24px; }
+.plan { display: block; width: 100%; height: auto; }
+.pl-road { fill: #0A0D0F; }
+.pl-ground { fill: #0E1214; }
+.pl-fence { fill: none; stroke: var(--fog); stroke-width: 2; stroke-dasharray: 10 6; transition: stroke .3s; }
+.pl-fence.on { stroke: var(--amber); stroke-width: 4; }
+.pl-wall { fill: #161B1E; stroke: var(--chalk); stroke-width: 5; }
+.pl-iw { stroke: var(--chalk); stroke-width: 2.5; fill: none; }
+.pl-gap { stroke: #161B1E; stroke-width: 7; }
+.pl-leaf { stroke: #8A979C; stroke-width: 2; fill: none; }
+.zone { fill: rgba(245, 183, 0, 0); transition: fill .3s; }
+.zone.on { fill: rgba(245, 183, 0, .22); }
+.plan.static .zone { fill: rgba(245, 183, 0, .1); }
+.pl-rack { fill: #2C353A; stroke: #5D6A70; stroke-width: 1; }
+.pl-furn { fill: #20272B; stroke: #7D898E; stroke-width: 1.5; }
+.pl-yard { fill: none; stroke: #5D6A70; stroke-width: 1.5; stroke-dasharray: 4 4; }
+.pl-park { stroke: #3A454A; stroke-width: 1.5; }
+.pl-t { font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 12.5px; fill: var(--fog); letter-spacing: .08em; }
+.pl-t.rm { fill: var(--chalk); font-size: 13.5px; }
+.led { fill: var(--bad); stroke: #0E1214; stroke-width: 2; }
+.led.go { fill: var(--ok); }
+.cone { fill: rgba(155, 167, 171, .13); }
+.camdot { fill: var(--chalk); }
+.route { fill: none; stroke: #59666B; stroke-width: 2; stroke-dasharray: 3 7; }
+.route-on { fill: none; stroke: var(--amber); stroke-width: 3.5; stroke-linejoin: round; }
+.dot { fill: var(--amber); stroke: #111518; stroke-width: 3; }
+.dot-ring { fill: none; stroke: var(--amber); stroke-width: 1.5; opacity: .5; }
+.badge circle { fill: #111518; stroke: var(--fog); stroke-width: 1.5; transition: fill .3s, stroke .3s; }
+.badge text { font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; fill: var(--fog); text-anchor: middle; }
+.badge.on circle { fill: var(--amber); stroke: var(--amber); }
+.badge.on text { fill: var(--ink); }
+.sig { fill: none; stroke: var(--amber); stroke-width: 2; stroke-dasharray: 6 6; opacity: 0; transition: opacity .3s; }
+.sig.on { opacity: 1; }
+
+@media (max-width: 860px) { .plan .pl-t:not(.rm) { display: none; } .plan .pl-t.rm { font-size: 17px; } .plan .badge { transform-box: fill-box; transform-origin: center; transform: scale(1.5); } }
+.lay-top { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; flex-wrap: wrap; }
+.lay-top h2 { font-size: clamp(28px, 4.2vw, 60px); max-width: 14em; }
+.lay-top .count { font-family: var(--f-display); font-stretch: 125%; font-weight: 900; font-size: clamp(40px, 6vw, 88px); line-height: .85; color: var(--amber); }
+.lay-top .count small { font-size: .35em; color: var(--fog); font-weight: 600; }
+.layers { display: grid; gap: 16px; margin-top: 28px; }
+.layer { background: rgba(17, 21, 24, .9); border: 1px solid var(--steel); border-top: 4px solid var(--amber); padding: 20px; display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 2fr); gap: 20px; }
+.layer h3 { font-size: clamp(22px, 2.6vw, 36px); margin-top: 8px; }
+.layer .code { color: var(--amber); }
+.layer .mine { margin-top: 14px; font-size: 14px; color: var(--chalk); }
+.layer .mine b { display: block; color: var(--fog); font-weight: 400; margin-bottom: 4px; }
+.trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border: 1px solid var(--steel); }
+.trio > div { padding: 14px; border-right: 1px solid var(--steel); font-size: 14.5px; line-height: 1.5; }
+.trio > div:last-child { border-right: 0; }
+.trio .mono { display: block; color: var(--fog); margin-bottom: 8px; }
+.refs { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; }
+.ref { font-family: var(--f-mono); font-size: 11.5px; border: 1px solid var(--steel); padding: 3px 7px; color: var(--fog); white-space: nowrap; }
+.sheet .ref { border-color: #b9c0bd; color: var(--ink-2); }
+@media (max-width: 860px) { .layer { grid-template-columns: minmax(0, 1fr); } .trio { grid-template-columns: minmax(0, 1fr); } .trio > div { border-right: 0; border-bottom: 1px solid var(--steel); } .trio > div:last-child { border-bottom: 0; } }
+/* pinned mode, set by script on wide screens */
+#layers.pin { height: 100vh; }
+#layers.pin .lay-inner { height: 100%; padding-top: calc(var(--bar-h) + 18px); padding-bottom: 20px; display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: clamp(20px, 3vw, 44px); align-items: center; }
+#layers.pin .plan-wrap { position: static; border-bottom: 0; padding: 0; background: none; }
+#layers.pin .plan-wrap .plan { max-height: calc(100vh - var(--bar-h) - 90px); }
+#layers.pin .lay-side { margin-top: 0; display: flex; flex-direction: column; height: 100%; min-height: 0; }
+#layers.pin .lay-top h2 { font-size: clamp(22px, 2.3vw, 34px); }
+#layers.pin .lay-top .count { font-size: clamp(34px, 3.6vw, 56px); }
+#layers.pin .layers { position: relative; flex: 1; margin-top: 16px; display: block; min-height: 0; }
+#layers.pin .layer { position: absolute; left: 0; right: 0; top: 0; grid-template-columns: minmax(0, 1fr); gap: 12px; padding: 16px; opacity: 0; visibility: hidden; transform: translateY(20px); transition: opacity .35s, transform .35s, visibility .35s; }
+#layers.pin .layer.on { opacity: 1; visibility: visible; transform: none; }
+#layers.pin .layer h3 { font-size: clamp(20px, 2vw, 28px); margin-top: 4px; }
+#layers.pin .layer .mine { margin-top: 8px; }
+#layers.pin .trio { grid-template-columns: minmax(0, 1fr); }
+#layers.pin .trio > div { border-right: 0; border-bottom: 1px solid var(--steel); padding: 9px 12px; font-size: 14px; line-height: 1.45; }
+#layers.pin .trio > div:last-child { border-bottom: 0; }
+#layers.pin .trio .mono { margin-bottom: 3px; }
+.lay-rail { display: none; }
+#layers.pin .lay-rail { display: flex; gap: 6px; margin-top: 14px; }
+.lay-rail i { flex: 1; height: 4px; background: var(--steel); }
+.lay-rail i.on { background: var(--amber); }
+
+/* ---------- 02 Chain ---------- */
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.tabs button { border: 1px solid var(--ink); background: transparent; color: var(--ink); padding: 9px 14px; font-weight: 500; }
+.tabs button[aria-selected="true"] { background: var(--ink); color: var(--tile); }
+.chain { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border: 1px solid var(--ink); background: var(--sheet); }
+.chain > div { padding: 20px 18px 22px; border-right: 1px solid var(--ink); position: relative; }
+.chain > div:last-child { border-right: 0; background: var(--ink); color: var(--tile); }
+.chain .mono { display: block; margin-bottom: 10px; color: var(--ink-2); }
+.chain > div:last-child .mono { color: var(--amber); }
+.chain h4 { font-family: var(--f-display); font-stretch: 112%; font-weight: 800; font-size: 19px; line-height: 1.15; margin-bottom: 8px; }
+.chain p { font-size: 14.5px; line-height: 1.5; }
+.chain .evi { margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(226, 229, 226, .3); font-size: 13.5px; }
+.chain > div:not(:last-child)::after { content: ""; position: absolute; right: -9px; top: 22px; width: 16px; height: 16px; background: var(--amber); border: 1px solid var(--ink); transform: rotate(45deg); z-index: 2; }
+@media (max-width: 900px) { .chain { grid-template-columns: minmax(0, 1fr); } .chain > div { border-right: 0; border-bottom: 1px solid var(--ink); } .chain > div:not(:last-child)::after { right: auto; left: 22px; top: auto; bottom: -9px; } }
+
+/* ---------- 03 Controls ---------- */
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; align-items: center; }
+.filters button { border: 1px solid var(--steel); background: transparent; padding: 7px 12px; display: inline-flex; gap: 8px; align-items: center; }
+.filters button[aria-pressed="true"] { background: var(--chalk); color: var(--ink); border-color: var(--chalk); }
+.dot { width: 9px; height: 9px; display: inline-block; flex: none; }
+.dot.op { background: var(--ok); } .dot.st { background: #6FA8DC; } .dot.pr { background: var(--amber); } .dot.no { background: transparent; border: 1.5px solid var(--fog); }
+.scroll-x { overflow-x: auto; }
+table.soa { width: 100%; min-width: 760px; border-collapse: collapse; font-size: 14.5px; }
+.soa th { text-align: left; font-family: var(--f-mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; font-weight: 400; color: var(--fog); padding: 10px 12px; border-bottom: 1px solid var(--chalk); }
+.soa td { padding: 13px 12px; border-bottom: 1px solid var(--steel); vertical-align: top; }
+.soa td:first-child { font-family: var(--f-mono); font-size: 12.5px; white-space: nowrap; color: var(--amber); }
+.soa td:nth-child(2) { font-weight: 600; min-width: 190px; }
+.soa td:nth-child(3) { color: #c9d1d1; }
+.soa .status { white-space: nowrap; display: inline-flex; gap: 8px; align-items: center; font-size: 13.5px; }
+.soa tr[hidden] { display: none; }
+.tally { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border: 1px solid var(--steel); margin-bottom: 22px; }
+.tally div { padding: 16px; border-right: 1px solid var(--steel); }
+.tally div:last-child { border-right: 0; }
+.tally b { font-family: var(--f-display); font-stretch: 125%; font-weight: 900; font-size: 40px; line-height: 1; display: block; }
+.tally span { color: var(--fog); font-size: 13.5px; display: flex; gap: 8px; align-items: center; margin-top: 6px; }
+@media (max-width: 640px) { .tally { grid-template-columns: 1fr 1fr; } .tally div:nth-child(2) { border-right: 0; } .tally div:nth-child(-n+2) { border-bottom: 1px solid var(--steel); } }
+
+/* ---------- 04 Audit ---------- */
+.audit-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.3fr); gap: 24px; align-items: start; }
+.criteria { background: var(--sheet); border: 1px solid var(--ink); padding: 18px; }
+.criteria h4 { font-family: var(--f-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; font-weight: 500; margin-bottom: 10px; }
+.criteria ol { display: grid; gap: 10px; font-size: 14.5px; line-height: 1.45; }
+.criteria ol li { display: grid; grid-template-columns: 30px 1fr; }
+.criteria ol li b { font-family: var(--f-mono); font-weight: 500; font-size: 12.5px; padding-top: 2px; }
+.log { background: var(--sheet); border: 1px solid var(--ink); }
+.log-head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 12px 14px; border-bottom: 1px solid var(--ink); }
+table.lg { width: 100%; min-width: 720px; border-collapse: collapse; font-size: 13.5px; }
+.lg th { text-align: left; font-family: var(--f-mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; font-weight: 400; color: var(--ink-2); padding: 8px 10px; border-bottom: 1px solid #b9c0bd; }
+.lg td { padding: 10px; border-bottom: 1px solid #cfd4d1; vertical-align: top; font-variant-numeric: tabular-nums; }
+.lg tbody tr { cursor: pointer; }
+.lg tbody tr:hover { background: #e9ebe7; }
+.lg .flag { width: 22px; height: 22px; border: 1.5px solid var(--ink); background: transparent; display: grid; place-items: center; padding: 0; font-weight: 700; font-size: 13px; line-height: 1; color: transparent; }
+.lg tr.sel .flag { background: var(--bad); border-color: var(--bad); color: #fff; }
+.lg tr.sel { background: #f6dcd5; }
+.lg tr.hit { background: #f6dcd5; } .lg tr.miss { background: #fbeebf; } .lg tr.fp { background: #dfe3e6; }
+.lg .why { display: none; font-size: 13px; margin-top: 6px; color: var(--bad-ink); font-weight: 500; }
+.lg tr.hit .why, .lg tr.miss .why, .lg tr.fp .why { display: block; }
+.lg tr.fp .why { color: var(--ink-2); }
+.log-foot { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: center; padding: 12px 14px; }
+.btn { background: var(--ink); color: var(--tile); border: 1px solid var(--ink); padding: 10px 18px; font-weight: 600; }
+.btn.ghost { background: transparent; color: var(--ink); }
+.result { margin-top: 24px; display: grid; gap: 18px; }
+.result[hidden] { display: none; }
+.score { font-family: var(--f-display); font-stretch: 118%; font-weight: 800; font-size: clamp(24px, 3vw, 38px); line-height: 1.05; text-transform: uppercase; }
+.fiveC { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border: 1px solid var(--ink); background: var(--sheet); }
+.fiveC div { padding: 16px 14px; border-right: 1px solid var(--ink); font-size: 14px; line-height: 1.5; }
+.fiveC div:last-child { border-right: 0; }
+.fiveC .mono { display: block; margin-bottom: 8px; color: var(--bad-ink); }
+@media (max-width: 1000px) { .audit-grid { grid-template-columns: minmax(0, 1fr); } .fiveC { grid-template-columns: minmax(0, 1fr); } .fiveC div { border-right: 0; border-bottom: 1px solid var(--ink); } .fiveC div:last-child { border-bottom: 0; } }
+
+/* ---------- 05 Work rail ---------- */
+.rail { display: flex; gap: 20px; padding-inline: var(--gut); overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 12px; }
+.hsec.pin .rail { overflow: visible; width: max-content; }
+.card { flex: none; width: min(560px, 84vw); scroll-snap-align: start; background: var(--graphite-2); border: 1px solid var(--steel); display: grid; grid-template-rows: auto 1fr auto; }
+.card-top { padding: 18px 20px; border-bottom: 1px solid var(--steel); display: flex; justify-content: space-between; gap: 12px; color: var(--fog); }
+.card-body { padding: 22px 20px; display: grid; gap: 14px; align-content: start; }
+.card h3 { font-size: clamp(26px, 2.6vw, 38px); }
+.card p { font-size: 15px; color: #c9d1d1; }
+.card ul { display: grid; gap: 8px; font-size: 14.5px; }
+.card ul li { padding-left: 18px; position: relative; }
+.card ul li::before { content: ""; position: absolute; left: 0; top: .62em; width: 8px; height: 2px; background: var(--amber); }
+.card .limit { padding: 14px 20px; border-top: 1px solid var(--steel); font-size: 13px; color: var(--fog); }
+.card .limit b { color: var(--amber); font-weight: 500; }
+.card a.go { display: inline-block; border: 1px solid var(--amber); color: var(--amber); padding: 8px 12px; text-decoration: none; justify-self: start; }
+.rowx { border: 1px solid var(--steel); font-size: 13.5px; }
+.rowx div { display: grid; grid-template-columns: 110px 1fr; border-bottom: 1px solid var(--steel); }
+.rowx div:last-child { border-bottom: 0; }
+.rowx span { padding: 8px 10px; }
+.rowx span:first-child { color: var(--fog); border-right: 1px solid var(--steel); }
+.rail-cue { color: var(--fog); padding-inline: var(--gut); margin-top: 14px; }
+
+
+/* ---------- Horizontal pinned rails (shared) ---------- */
+.hsec { overflow: hidden; }
+.hprog { display: none; height: 3px; background: rgba(127, 135, 138, .35); margin: 0 var(--gut) 18px; }
+.hsec.pin .hprog { display: block; }
+.hprog i { display: block; height: 100%; background: var(--amber); transform-origin: left center; transform: scaleX(0); }
+.sheet .hprog i { background: var(--ink); }
+.sheet .rail-cue { color: var(--ink-2); }
+
+/* ---------- Lifecycle ---------- */
+.kinds { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border: 1px solid var(--ink); background: var(--sheet); margin-bottom: 28px; }
+.kinds div { padding: 16px; border-right: 1px solid var(--ink); font-size: 14px; line-height: 1.5; }
+.kinds div:last-child { border-right: 0; }
+.kinds strong { display: block; font-family: var(--f-display); font-stretch: 112%; font-weight: 800; font-size: 17px; margin-bottom: 6px; }
+.kinds .mono { display: block; color: var(--ink-2); margin-bottom: 6px; }
+@media (max-width: 900px) { .kinds { grid-template-columns: minmax(0, 1fr); } .kinds div { border-right: 0; border-bottom: 1px solid var(--ink); } .kinds div:last-child { border-bottom: 0; } }
+.stage { flex: none; width: min(430px, 84vw); scroll-snap-align: start; background: var(--sheet); border: 1px solid var(--ink); border-top: 8px solid var(--ink); padding: 20px; display: grid; gap: 12px; align-content: start; }
+.stage-n { font-family: var(--f-display); font-stretch: 125%; font-weight: 900; font-size: 64px; line-height: .85; color: transparent; -webkit-text-stroke: 1.5px var(--ink); }
+.stage h3 { font-size: 24px; }
+.stage p { font-size: 15px; line-height: 1.5; }
+.stage-eg, .stage-out { font-size: 14px; line-height: 1.5; padding-top: 10px; border-top: 1px solid #b9c0bd; }
+.stage-eg .mono, .stage-out .mono { display: block; color: var(--ink-2); margin-bottom: 4px; }
+.stage-out { background: var(--ink); color: var(--tile); padding: 10px 12px; border-top: 0; }
+.stage-out .mono { color: var(--amber); }
+
+/* ---------- Fieldwork exercises ---------- */
+.ex { margin-top: clamp(44px, 6vw, 80px); padding-top: 28px; border-top: 4px solid var(--ink); }
+.ex-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 20px; margin-bottom: 22px; align-items: end; }
+.ex-head h3 { font-size: clamp(24px, 3vw, 40px); margin-top: 8px; }
+.ex-head p { color: var(--ink-2); font-size: 15.5px; max-width: 40em; }
+@media (max-width: 800px) { .ex-head { grid-template-columns: minmax(0, 1fr); } }
+.grade { border: 1px solid var(--ink); background: var(--sheet); }
+.grade li { display: grid; grid-template-columns: 44px minmax(0, 1.3fr) minmax(0, 1fr); gap: 14px; padding: 16px; border-bottom: 1px solid #b9c0bd; align-items: start; }
+.grade li:last-child { border-bottom: 0; }
+.grade .gn { font-family: var(--f-mono); font-size: 12.5px; padding-top: 3px; }
+.grade .obs { font-size: 15px; line-height: 1.5; }
+.grade .why { display: none; margin-top: 8px; font-size: 14px; color: var(--ink-2); border-left: 3px solid var(--ink); padding-left: 10px; }
+.grade li.done .why { display: block; }
+.gbtns { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.gbtns button { border: 1px solid var(--ink); background: transparent; color: var(--ink); padding: 8px 6px; font-size: 13px; font-weight: 500; }
+.gbtns button:disabled { cursor: default; opacity: .45; }
+.gbtns button.key { background: var(--ink); color: var(--tile); opacity: 1; }
+.gbtns button.wrong { background: #f6dcd5; border-color: var(--bad-ink); color: var(--bad-ink); opacity: 1; text-decoration: line-through; }
+.gscore { margin-top: 14px; font-family: var(--f-mono); font-size: 13px; }
+@media (max-width: 800px) { .grade li { grid-template-columns: 44px minmax(0, 1fr); } .gbtns { grid-column: 1 / -1; } }
+.policy { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+.pdoc { background: #FBFBF8; border: 1px solid var(--ink); }
+.pdoc-h { padding: 14px 18px; border-bottom: 1px solid var(--ink); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.pdoc-h strong { font-family: var(--f-display); font-stretch: 112%; font-weight: 800; font-size: 18px; }
+.clause { display: grid; grid-template-columns: 44px 1fr; width: 100%; text-align: left; background: transparent; border: 0; border-bottom: 1px solid #cfd4d1; padding: 13px 18px; color: var(--ink); font-size: 15px; line-height: 1.5; }
+.clause:hover { background: #eef0ec; }
+.clause b { font-family: var(--f-mono); font-size: 12.5px; font-weight: 500; padding-top: 2px; }
+.clause .cm { display: none; grid-column: 2; margin-top: 8px; font-size: 14px; }
+.clause.open .cm { display: block; }
+.clause.open { background: #fff; }
+.clause.open.v-gap { box-shadow: inset 5px 0 0 var(--bad); } .clause.open.v-weak { box-shadow: inset 5px 0 0 var(--amber); } .clause.open.v-ok { box-shadow: inset 5px 0 0 var(--ok); }
+.vchip { display: inline-block; font-family: var(--f-mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; padding: 1px 7px; margin-right: 8px; background: var(--ink); color: var(--tile); }
+.v-gap .vchip { background: var(--bad-ink); } .v-ok .vchip { background: var(--ok-ink); } .v-weak .vchip { background: var(--amber); color: var(--ink); }
+.pside { border: 1px solid var(--ink); background: var(--sheet); padding: 18px; display: grid; gap: 14px; font-size: 14.5px; position: sticky; top: calc(var(--bar-h) + 16px); }
+.pside b.big { font-family: var(--f-display); font-stretch: 125%; font-weight: 900; font-size: 44px; line-height: .9; display: block; }
+.pside ol { display: grid; gap: 8px; list-style: decimal; padding-left: 18px; }
+@media (max-width: 900px) { .policy { grid-template-columns: minmax(0, 1fr); } .pside { position: static; } }
+
+/* ---------- Risk ---------- */
+.risk { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(20px, 4vw, 56px); align-items: start; }
+@media (max-width: 960px) { .risk { grid-template-columns: minmax(0, 1fr); } }
+.rsel { display: grid; gap: 6px; }
+.rsel button { text-align: left; border: 1px solid var(--steel); background: transparent; padding: 11px 14px; display: grid; grid-template-columns: 52px 1fr; gap: 8px; font-size: 15px; }
+.rsel button span { font-family: var(--f-mono); font-size: 12px; color: var(--amber); padding-top: 3px; }
+.rsel button small { display: block; color: var(--fog); font-size: 12.5px; }
+.rsel button[aria-pressed="true"] { background: var(--chalk); color: var(--ink); border-color: var(--chalk); }
+.rsel button[aria-pressed="true"] span { color: var(--ink); } .rsel button[aria-pressed="true"] small { color: var(--ink-2); }
+.rctl { margin-top: 20px; border: 1px solid var(--steel); }
+.rctl h4 { font-family: var(--f-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; font-weight: 400; color: var(--fog); padding: 10px 14px; border-bottom: 1px solid var(--steel); }
+.rctl label { display: grid; grid-template-columns: 22px 1fr auto; gap: 10px; padding: 11px 14px; border-bottom: 1px solid var(--steel); font-size: 14.5px; cursor: pointer; align-items: start; }
+.rctl label:last-child { border-bottom: 0; }
+.rctl input { width: 18px; height: 18px; accent-color: var(--amber); margin: 2px 0 0; }
+.rctl em { font-style: normal; font-family: var(--f-mono); font-size: 12px; color: var(--fog); white-space: nowrap; }
+.mx-wrap { display: grid; grid-template-columns: 22px 1fr; gap: 8px; }
+.mx-y { writing-mode: vertical-rl; transform: rotate(180deg); text-align: center; color: var(--fog); }
+.mx { display: grid; grid-template-columns: 22px repeat(5, minmax(0, 1fr)); gap: 3px; }
+.mx .ax { font-family: var(--f-mono); font-size: 11.5px; color: var(--fog); display: grid; place-items: center; }
+.mx .cell { aspect-ratio: 1.25; position: relative; display: grid; place-items: center; font-family: var(--f-mono); font-size: 12px; color: rgba(20, 24, 26, .55); }
+.b-low { background: #AEBBB4; } .b-med { background: #E3CF86; } .b-high { background: #E0A064; } .b-ext { background: #D4614C; }
+.mk { position: absolute; inset: 14%; border-radius: 50%; display: grid; place-items: center; font-family: var(--f-mono); font-size: 11px; font-weight: 500; letter-spacing: .04em; }
+.mk.inh { border: 2.5px dashed var(--ink); color: var(--ink); }
+.mk.res { background: var(--ink); color: var(--chalk); inset: 20%; }
+.mk.both { background: var(--ink); color: var(--chalk); outline: 2.5px dashed var(--ink); outline-offset: 3px; }
+.mx-x { text-align: center; color: var(--fog); margin-top: 8px; padding-left: 30px; }
+.rout { margin-top: 18px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid var(--steel); }
+.rout div { padding: 14px; border-right: 1px solid var(--steel); }
+.rout div:last-child { border-right: 0; }
+.rout .mono { color: var(--fog); display: block; margin-bottom: 6px; }
+.rout b { font-family: var(--f-display); font-stretch: 120%; font-weight: 900; font-size: 30px; line-height: 1; display: block; }
+.rout small { font-size: 13px; color: var(--fog); }
+.rout .verdict-ok { color: var(--ok); } .rout .verdict-no { color: var(--bad); }
+.rstmt { margin-top: 14px; font-size: 14.5px; color: #c9d1d1; }
+@media (max-width: 520px) { .rout { grid-template-columns: minmax(0, 1fr); } .rout div { border-right: 0; border-bottom: 1px solid var(--steel); } }
+.pen { margin-top: clamp(44px, 6vw, 80px); padding-top: 28px; border-top: 1px solid var(--steel); }
+.pen-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid var(--steel); margin-top: 22px; }
+.pen-grid > div { padding: 20px; border-right: 1px solid var(--steel); }
+.pen-grid > div:last-child { border-right: 0; background: var(--graphite-2); }
+.pen-grid h4 { font-family: var(--f-display); font-stretch: 112%; font-weight: 800; font-size: 20px; text-transform: uppercase; margin: 8px 0 12px; }
+.pen-grid ul { display: grid; gap: 8px; font-size: 14.5px; }
+.pen-grid li { padding-left: 16px; position: relative; }
+.pen-grid li::before { content: ""; position: absolute; left: 0; top: .62em; width: 7px; height: 2px; background: var(--amber); }
+@media (max-width: 900px) { .pen-grid { grid-template-columns: minmax(0, 1fr); } .pen-grid > div { border-right: 0; border-bottom: 1px solid var(--steel); } }
+
+/* ---------- Templates ---------- */
+.paper { flex: none; width: min(470px, 86vw); scroll-snap-align: start; background: #FBFBF8; color: var(--ink); border: 1px solid var(--ink); box-shadow: 6px 6px 0 rgba(20, 24, 26, .18); display: grid; grid-template-rows: auto 1fr auto; }
+.paper-h { padding: 14px 16px; border-bottom: 2px solid var(--ink); display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+.paper-h strong { font-family: var(--f-display); font-stretch: 112%; font-weight: 800; font-size: 19px; text-transform: uppercase; line-height: 1.1; }
+.paper dl { margin: 0; font-size: 13.5px; line-height: 1.45; }
+.paper dl div { display: grid; grid-template-columns: 112px 1fr; border-bottom: 1px solid #d5d9d5; }
+.paper dt { padding: 7px 10px 7px 16px; font-family: var(--f-mono); font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-2); border-right: 1px solid #d5d9d5; }
+.paper dd { margin: 0; padding: 7px 16px 7px 10px; }
+.paper-f { padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 12px; color: var(--ink-2); }
+.paper-f button { background: var(--ink); color: var(--tile); border: 0; padding: 7px 12px; font-family: var(--f-mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; }
+
+/* ---------- 06 Record ---------- */
+.rec-grid { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 72px); }
+.sub { font-family: var(--f-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; padding-bottom: 10px; border-bottom: 2px solid var(--ink); margin-bottom: 4px; }
+.job { display: grid; grid-template-columns: 150px 1fr; gap: 18px; padding: 20px 0; border-bottom: 1px solid #b9c0bd; }
+.job .when { font-family: var(--f-mono); font-size: 12.5px; color: var(--ink-2); padding-top: 4px; }
+.job h3 { font-size: 22px; font-stretch: 108%; text-transform: none; letter-spacing: 0; line-height: 1.15; }
+.job .org { color: var(--ink-2); font-size: 15px; margin-top: 2px; }
+.job ul { margin-top: 10px; display: grid; gap: 6px; font-size: 15px; }
+.job ul li { padding-left: 16px; position: relative; }
+.job ul li::before { content: ""; position: absolute; left: 0; top: .65em; width: 7px; height: 2px; background: var(--ink); }
+.job.now { border-left: 6px solid var(--amber); padding-left: 16px; background: var(--sheet); padding-right: 16px; }
+.earlier { font-size: 14.5px; color: var(--ink-2); padding-top: 16px; }
+.side { display: grid; gap: 34px; align-content: start; }
+.edu li { padding: 14px 0; border-bottom: 1px solid #b9c0bd; }
+.edu strong { display: block; font-weight: 600; line-height: 1.3; }
+.edu span { font-size: 14px; color: var(--ink-2); display: block; }
+.edu .live { display: inline-block; font-family: var(--f-mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; background: var(--ink); color: var(--amber); padding: 2px 7px; margin-top: 6px; }
+.plain li { padding: 9px 0; border-bottom: 1px solid #b9c0bd; font-size: 15px; }
+@media (max-width: 900px) { .rec-grid { grid-template-columns: minmax(0, 1fr); } .job { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
+
+/* ---------- 07 Limits ---------- */
+.limits { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--steel); }
+.limits li { padding: 22px 22px 22px 0; border-bottom: 1px solid var(--steel); display: grid; grid-template-columns: 40px 1fr; gap: 6px; }
+.limits li:nth-child(odd) { border-right: 1px solid var(--steel); }
+.limits li:nth-child(even) { padding-left: 22px; }
+.limits .x { font-family: var(--f-mono); color: var(--bad); font-size: 13px; padding-top: 3px; }
+.limits strong { display: block; font-size: 18px; font-weight: 600; line-height: 1.3; margin-bottom: 4px; }
+.limits span { color: var(--fog); font-size: 15px; }
+@media (max-width: 760px) { .limits { grid-template-columns: minmax(0, 1fr); } .limits li:nth-child(odd) { border-right: 0; } .limits li:nth-child(even) { padding-left: 0; } }
+
+/* ---------- Contact ---------- */
+.out { background: var(--amber); color: var(--ink); }
+.out h2 { font-size: clamp(36px, 8vw, 128px); font-weight: 900; }
+.out .mail { display: inline-block; margin-top: 24px; font-family: var(--f-mono); font-size: clamp(15px, 2vw, 22px); border-bottom: 2px solid var(--ink); text-decoration: none; padding-bottom: 2px; word-break: break-all; }
+.out .row { display: flex; flex-wrap: wrap; gap: 12px 40px; margin-top: 30px; font-size: 15px; }
+.out .copy { background: var(--ink); color: var(--amber); border: 0; padding: 9px 14px; margin-left: 12px; font-family: var(--f-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+footer { padding: 20px var(--gut) 28px; color: var(--fog); font-size: 13px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+/* ---------- Evidence mode ---------- */
+body.ev [data-ev] { outline: 1.5px dashed var(--amber); outline-offset: 4px; position: relative; }
+body.ev [data-ev]::before { content: attr(data-ev); position: absolute; top: -11px; right: 6px; z-index: 5; font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 2px 7px; background: var(--amber); color: var(--ink); white-space: nowrap; }
+body.ev [data-ev^="Study"]::before { background: #6FA8DC; }
+body.ev [data-ev^="Fictional"]::before, body.ev [data-ev^="Illustration"]::before { background: var(--chalk); }
+body.ev [data-ev^="Employment"]::before { background: var(--ok); }
+.evbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 39; background: var(--ink); border-top: 2px solid var(--amber); padding: 10px var(--gut); display: none; gap: 8px 22px; flex-wrap: wrap; font-size: 13px; color: var(--chalk); align-items: center; }
+body.ev .evbar { display: flex; }
+.evbar span { display: inline-flex; align-items: center; gap: 7px; }
+.evbar i { width: 10px; height: 10px; display: inline-block; }
+
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .cam .rec::before { animation: none; } }
+</style>
+</head>
+<body class="locked sealed">
+
+<!-- Loader: pre-entry assurance check -->
+<div id="gate" role="status" aria-label="Opening the portfolio">
+  <div class="leaf l"></div><div class="leaf r"></div>
+  <div class="gate-ui">
+    <div class="g-top mono"><span><b>Access loading</b> · Visitor entry · Authorised persons only</span><span class="lock" id="glock"><i></i><span>Door locked</span></span></div>
+    <div class="g-mid">
+      <div><div class="g-pct tnum"><span id="gpct">0</span><small>%</small></div><span class="g-status mono" id="gres">Loading</span></div>
+      <div><div class="g-bar"><i id="gbar"></i></div>
+      <ol class="g-list">
+        <li data-stage="Verification"><span class="ref mono">A.7.2<small>ISO/IEC 27001</small></span><span class="what"><strong>Verification</strong><small>Identity matched to an approved booking</small></span><span class="mono st">Wait</span></li>
+        <li data-stage="Authorisation"><span class="ref mono">A.5.18<small>ISO/IEC 27001</small></span><span class="what"><strong>Authorisation</strong><small>Access level set: visitor, read only</small></span><span class="mono st">Wait</span></li>
+        <li data-stage="Induction"><span class="ref mono">A.6.3<small>ISO/IEC 27001</small></span><span class="what"><strong>Induction</strong><small>Site induction current on the day of entry</small></span><span class="mono st">Wait</span></li>
+        <li class="pt" data-stage="Rules of engagement"><span class="ref mono">RoE<small>Pen test</small></span><span class="what"><strong>Rules of engagement</strong><small>No testing in scope, viewing only</small></span><span class="mono st">Wait</span></li>
+        <li data-stage="Access"><span class="ref mono">CC6.4<small>SOC 2</small></span><span class="what"><strong>Access</strong><small>Mantrap cycle, one person, entry logged</small></span><span class="mono st">Wait</span></li>
+      </ol></div>
+    </div>
+    <div>
+      <div class="ticker mono" aria-hidden="true"><div class="ticker-in"></div></div>
+      <div class="g-foot"><span>The site stays closed until every check passes. This is a demonstration. Nothing about you is checked or stored.</span><span class="mono tnum" id="gclock">--:--:--</span></div>
+    </div>
+  </div>
+  <div class="pass" id="gpass">
+    <div class="pass-h mono"><span>Visitor pass</span><span>V-001</span></div>
+    <div class="pass-b"><strong>Access granted</strong>
+      <dl><dt>Level</dt><dd>Read only</dd><dt>Escort</dt><dd>Atichat Khanma</dd><dt>Valid</dt><dd>This visit</dd></dl></div>
+    <div class="pass-bar"></div>
+  </div>
+</div>
+
+<header class="bar">
+  <a class="id" href="#top"><b>AK</b>Atichat Khanma</a>
+  <nav class="mono" aria-label="Sections">
+    <a href="#layers"><span>01</span>Layers</a>
+    <a href="#chain"><span>02</span>Chain</a>
+    <a href="#controls"><span>03</span>Controls</a>
+    <a href="#lifecycle"><span>04</span>Lifecycle</a>
+    <a href="#audit"><span>05</span>Fieldwork</a>
+    <a href="#risk"><span>06</span>Risk</a>
+    <a href="#templates"><span>07</span>Templates</a>
+    <a href="#work"><span>08</span>Work</a>
+    <a href="#record"><span>09</span>Record</a>
+    <a href="#limits"><span>10</span>Limits</a>
+  </nav>
+  <span class="clock mono tnum" id="clock">AKL --:--:--</span>
+  <button type="button" class="evbtn mono" id="evbtn" aria-pressed="false" title="Label every claim on this page with the evidence behind it"><i></i>Audit this page</button>
+</header>
+
+<main id="top">
+
+<!-- HERO -->
+<section class="hero wrap">
+  <div class="hero-grid">
+    <div>
+      <span class="kicker mono">Compliance and governance portfolio · Auckland, New Zealand</span>
+      <h1><span class="ln"><span>Atichat</span></span><span class="ln"><span>Khanma</span></span></h1>
+      <p class="lede">I work the front desk of two Auckland data centres and study information governance. I am building a career in <em>governance, risk and compliance</em> from the place where a written control meets a real person at a real door.</p>
+    </div>
+    <figure class="cam">
+      <div class="cam-v"><video autoplay muted loop playsinline poster="feed.jpg" aria-hidden="true"><source src="feed.mp4" type="video/mp4"></video>
+      <div class="osd mono"><div><span class="rec">Illustration</span><span>Site plan · Visitor route</span></div><div><span>Five doors, one at a time</span><span class="tnum" id="osdclock">--:--:--</span></div></div></div>
+      <figcaption>A generic site plan, not a real one. A visitor passes five controlled doors between the road and a rack, and each door locks again behind them.</figcaption>
+    </figure>
+  </div>
+  <ul class="facts">
+    <li data-ev="Employment"><span class="mono">Now</span><strong>Data Centre Concierge, Allied Security</strong><small>Two Auckland data centres, casual</small></li>
+    <li data-ev="Study · in progress"><span class="mono">Studying</span><strong>PGDip Information Governance</strong><small>University of Auckland, expected Sept 2027</small></li>
+    <li data-ev="Study · in progress"><span class="mono">Studying</span><strong>AI Cybersecurity &amp; Governance</strong><small>Columbia University, online</small></li>
+    <li data-ev="Independent project"><span class="mono">Built</span><strong>Tickmark Academy</strong><small>Self-study portal for audit and compliance</small></li>
+  </ul>
+</section>
+<div class="hazard" aria-hidden="true"></div>
+
+<!-- 01 LAYERS -->
+<section id="layers">
+  <div class="lay-inner wrap">
+    <div class="plan-wrap" data-ev="Illustration">
+<svg class="plan" viewBox="0 0 1000 640" role="img" aria-label="Generic data centre site plan showing six layers of access control from the street to the data hall">
+<rect class="pl-ground" x="0" y="0" width="1000" height="612"/><rect class="pl-road" x="0" y="612" width="1000" height="28"/>
+<text class="pl-t" x="860" y="631">PUBLIC ROAD</text>
+<rect class="pl-fence" data-z="1" x="30" y="30" width="940" height="570"/>
+<text class="pl-t" x="44" y="54">PERIMETER FENCE</text>
+<line class="pl-gap" x1="104" y1="600" x2="156" y2="600" style="stroke:#0E1214"/><line class="pl-leaf" x1="104" y1="600" x2="128" y2="584"/><line class="pl-leaf" x1="156" y1="600" x2="132" y2="584"/>
+<rect class="pl-furn" x="164" y="572" width="34" height="26"/><text class="pl-t" x="204" y="590">GATEHOUSE</text>
+<line class="pl-park" x1="52" y1="420" x2="52" y2="462"/>
+<line class="pl-park" x1="76" y1="420" x2="76" y2="462"/>
+<line class="pl-park" x1="100" y1="420" x2="100" y2="462"/>
+<line class="pl-park" x1="124" y1="420" x2="124" y2="462"/>
+<line class="pl-park" x1="148" y1="420" x2="148" y2="462"/>
+<line class="pl-park" x1="52" y1="420" x2="148" y2="420"/><text class="pl-t" x="52" y="482">CAR PARK</text>
+<rect class="pl-yard" x="50" y="100" width="118" height="210"/><text class="pl-t" x="58" y="330">PLANT YARD</text>
+<rect class="pl-furn" x="62" y="114" width="58" height="34"/><text class="pl-t" x="72" y="136" style="font-size:10.5px">GEN</text>
+<rect class="pl-furn" x="62" y="162" width="58" height="34"/><text class="pl-t" x="72" y="184" style="font-size:10.5px">GEN</text>
+<rect class="pl-furn" x="62" y="210" width="58" height="34"/><text class="pl-t" x="72" y="232" style="font-size:10.5px">GEN</text>
+<circle class="pl-furn" cx="146" cy="128" r="13"/><line class="pl-leaf" x1="137" y1="128" x2="155" y2="128"/><line class="pl-leaf" x1="146" y1="119" x2="146" y2="137"/>
+<circle class="pl-furn" cx="146" cy="182" r="13"/><line class="pl-leaf" x1="137" y1="182" x2="155" y2="182"/><line class="pl-leaf" x1="146" y1="173" x2="146" y2="191"/>
+<circle class="pl-furn" cx="146" cy="236" r="13"/><line class="pl-leaf" x1="137" y1="236" x2="155" y2="236"/><line class="pl-leaf" x1="146" y1="227" x2="146" y2="245"/>
+<circle class="pl-furn" cx="146" cy="276" r="13"/><line class="pl-leaf" x1="137" y1="276" x2="155" y2="276"/><line class="pl-leaf" x1="146" y1="267" x2="146" y2="285"/>
+<rect class="pl-wall" x="200" y="80" width="740" height="470"/>
+<rect class="zone" data-z="5" x="200" y="80" width="740" height="270"/>
+<path class="zone" data-z="2" d="M200 350H260V410H340V350H400V550H200Z"/>
+<rect class="zone" data-z="4" x="260" y="350" width="80" height="60"/>
+<rect class="zone" data-z="3" x="400" y="350" width="120" height="200"/>
+<rect class="zone" data-z="6" x="520" y="350" width="150" height="200"/>
+<path class="pl-iw" d="M200 300H940M200 350H940M570 80V300M400 350V550M520 350V550M670 350V550M800 350V550M260 350V410H340V350"/>
+<rect class="pl-rack" x="228" y="108" width="22" height="160"/>
+<line x1="228" y1="124" x2="250" y2="124" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="228" y1="140" x2="250" y2="140" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="228" y1="156" x2="250" y2="156" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="228" y1="172" x2="250" y2="172" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="228" y1="188" x2="250" y2="188" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="228" y1="204" x2="250" y2="204" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="228" y1="220" x2="250" y2="220" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="228" y1="236" x2="250" y2="236" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="228" y1="252" x2="250" y2="252" stroke="#5D6A70" stroke-width=".6"/>
+<rect class="pl-rack" x="274" y="108" width="22" height="160"/>
+<line x1="274" y1="124" x2="296" y2="124" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="274" y1="140" x2="296" y2="140" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="274" y1="156" x2="296" y2="156" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="274" y1="172" x2="296" y2="172" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="274" y1="188" x2="296" y2="188" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="274" y1="204" x2="296" y2="204" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="274" y1="220" x2="296" y2="220" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="274" y1="236" x2="296" y2="236" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="274" y1="252" x2="296" y2="252" stroke="#5D6A70" stroke-width=".6"/>
+<rect class="pl-rack" x="320" y="108" width="22" height="160"/>
+<line x1="320" y1="124" x2="342" y2="124" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="320" y1="140" x2="342" y2="140" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="320" y1="156" x2="342" y2="156" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="320" y1="172" x2="342" y2="172" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="320" y1="188" x2="342" y2="188" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="320" y1="204" x2="342" y2="204" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="320" y1="220" x2="342" y2="220" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="320" y1="236" x2="342" y2="236" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="320" y1="252" x2="342" y2="252" stroke="#5D6A70" stroke-width=".6"/>
+<rect class="pl-rack" x="366" y="108" width="22" height="160"/>
+<line x1="366" y1="124" x2="388" y2="124" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="366" y1="140" x2="388" y2="140" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="366" y1="156" x2="388" y2="156" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="366" y1="172" x2="388" y2="172" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="366" y1="188" x2="388" y2="188" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="366" y1="204" x2="388" y2="204" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="366" y1="220" x2="388" y2="220" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="366" y1="236" x2="388" y2="236" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="366" y1="252" x2="388" y2="252" stroke="#5D6A70" stroke-width=".6"/>
+<rect class="pl-rack" x="422" y="108" width="22" height="160"/>
+<line x1="422" y1="124" x2="444" y2="124" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="422" y1="140" x2="444" y2="140" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="422" y1="156" x2="444" y2="156" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="422" y1="172" x2="444" y2="172" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="422" y1="188" x2="444" y2="188" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="422" y1="204" x2="444" y2="204" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="422" y1="220" x2="444" y2="220" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="422" y1="236" x2="444" y2="236" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="422" y1="252" x2="444" y2="252" stroke="#5D6A70" stroke-width=".6"/>
+<rect class="pl-rack" x="468" y="108" width="22" height="160"/>
+<line x1="468" y1="124" x2="490" y2="124" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="468" y1="140" x2="490" y2="140" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="468" y1="156" x2="490" y2="156" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="468" y1="172" x2="490" y2="172" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="468" y1="188" x2="490" y2="188" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="468" y1="204" x2="490" y2="204" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="468" y1="220" x2="490" y2="220" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="468" y1="236" x2="490" y2="236" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="468" y1="252" x2="490" y2="252" stroke="#5D6A70" stroke-width=".6"/>
+<rect class="pl-rack" x="514" y="108" width="22" height="160"/>
+<line x1="514" y1="124" x2="536" y2="124" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="514" y1="140" x2="536" y2="140" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="514" y1="156" x2="536" y2="156" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="514" y1="172" x2="536" y2="172" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="514" y1="188" x2="536" y2="188" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="514" y1="204" x2="536" y2="204" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="514" y1="220" x2="536" y2="220" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="514" y1="236" x2="536" y2="236" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="514" y1="252" x2="536" y2="252" stroke="#5D6A70" stroke-width=".6"/>
+<rect class="pl-rack" x="598" y="108" width="22" height="160"/>
+<line x1="598" y1="124" x2="620" y2="124" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="598" y1="140" x2="620" y2="140" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="598" y1="156" x2="620" y2="156" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="598" y1="172" x2="620" y2="172" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="598" y1="188" x2="620" y2="188" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="598" y1="204" x2="620" y2="204" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="598" y1="220" x2="620" y2="220" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="598" y1="236" x2="620" y2="236" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="598" y1="252" x2="620" y2="252" stroke="#5D6A70" stroke-width=".6"/>
+<rect class="pl-rack" x="644" y="108" width="22" height="160"/>
+<line x1="644" y1="124" x2="666" y2="124" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="644" y1="140" x2="666" y2="140" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="644" y1="156" x2="666" y2="156" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="644" y1="172" x2="666" y2="172" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="644" y1="188" x2="666" y2="188" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="644" y1="204" x2="666" y2="204" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="644" y1="220" x2="666" y2="220" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="644" y1="236" x2="666" y2="236" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="644" y1="252" x2="666" y2="252" stroke="#5D6A70" stroke-width=".6"/>
+<rect class="pl-rack" x="690" y="108" width="22" height="160"/>
+<line x1="690" y1="124" x2="712" y2="124" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="690" y1="140" x2="712" y2="140" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="690" y1="156" x2="712" y2="156" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="690" y1="172" x2="712" y2="172" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="690" y1="188" x2="712" y2="188" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="690" y1="204" x2="712" y2="204" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="690" y1="220" x2="712" y2="220" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="690" y1="236" x2="712" y2="236" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="690" y1="252" x2="712" y2="252" stroke="#5D6A70" stroke-width=".6"/>
+<rect class="pl-rack" x="736" y="108" width="22" height="160"/>
+<line x1="736" y1="124" x2="758" y2="124" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="736" y1="140" x2="758" y2="140" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="736" y1="156" x2="758" y2="156" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="736" y1="172" x2="758" y2="172" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="736" y1="188" x2="758" y2="188" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="736" y1="204" x2="758" y2="204" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="736" y1="220" x2="758" y2="220" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="736" y1="236" x2="758" y2="236" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="736" y1="252" x2="758" y2="252" stroke="#5D6A70" stroke-width=".6"/>
+<rect class="pl-rack" x="792" y="108" width="22" height="160"/>
+<line x1="792" y1="124" x2="814" y2="124" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="792" y1="140" x2="814" y2="140" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="792" y1="156" x2="814" y2="156" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="792" y1="172" x2="814" y2="172" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="792" y1="188" x2="814" y2="188" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="792" y1="204" x2="814" y2="204" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="792" y1="220" x2="814" y2="220" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="792" y1="236" x2="814" y2="236" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="792" y1="252" x2="814" y2="252" stroke="#5D6A70" stroke-width=".6"/>
+<rect class="pl-rack" x="838" y="108" width="22" height="160"/>
+<line x1="838" y1="124" x2="860" y2="124" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="838" y1="140" x2="860" y2="140" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="838" y1="156" x2="860" y2="156" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="838" y1="172" x2="860" y2="172" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="838" y1="188" x2="860" y2="188" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="838" y1="204" x2="860" y2="204" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="838" y1="220" x2="860" y2="220" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="838" y1="236" x2="860" y2="236" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="838" y1="252" x2="860" y2="252" stroke="#5D6A70" stroke-width=".6"/>
+<rect class="pl-rack" x="884" y="108" width="22" height="160"/>
+<line x1="884" y1="124" x2="906" y2="124" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="884" y1="140" x2="906" y2="140" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="884" y1="156" x2="906" y2="156" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="884" y1="172" x2="906" y2="172" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="884" y1="188" x2="906" y2="188" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="884" y1="204" x2="906" y2="204" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="884" y1="220" x2="906" y2="220" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="884" y1="236" x2="906" y2="236" stroke="#5D6A70" stroke-width=".6"/>
+<line x1="884" y1="252" x2="906" y2="252" stroke="#5D6A70" stroke-width=".6"/>
+<text class="pl-t rm" x="232" y="100">DATA HALL 1</text><text class="pl-t rm" x="584" y="100">DATA HALL 2</text>
+<text class="pl-t" x="560" y="330">SECURE CORRIDOR</text>
+<rect class="pl-furn" x="214" y="276" width="46" height="16"/>
+<rect class="pl-furn" x="584" y="276" width="46" height="16"/>
+<rect class="pl-furn" x="510" y="276" width="46" height="16"/>
+<rect class="pl-furn" x="880" y="276" width="46" height="16"/>
+<rect class="pl-furn" x="345" y="440" width="16" height="92"/><text class="pl-t rm" x="212" y="538">RECEPTION</text><text class="pl-t" x="212" y="434" style="font-size:10.5px">WAITING</text><rect class="pl-furn" x="212" y="446" width="14" height="58"/>
+<text class="pl-t rm" x="268" y="368" style="font-size:11px">MANTRAP</text>
+<text class="pl-t rm" x="410" y="372">SECURITY</text><text class="pl-t rm" x="410" y="388">OFFICE</text><rect class="pl-furn" x="462" y="420" width="46" height="18"/><text class="pl-t" x="410" y="536" style="font-size:10.5px">CARDS · KEYS</text>
+<rect class="pl-furn" x="486" y="460" width="22" height="16"/>
+<rect class="pl-furn" x="486" y="482" width="22" height="16"/>
+<rect class="pl-furn" x="486" y="504" width="22" height="16"/>
+<line class="pl-gap" x1="400" y1="456" x2="400" y2="486"/><line class="pl-leaf" x1="394" y1="456" x2="394" y2="486"/>
+<text class="pl-t rm" x="530" y="372">CONTROL ROOM</text><path class="pl-furn" d="M545 470 Q595 430 645 470 L645 484 Q595 446 545 484Z"/>
+<rect class="pl-furn" x="556" y="400" width="18" height="8"/>
+<rect class="pl-furn" x="580" y="400" width="18" height="8"/>
+<rect class="pl-furn" x="604" y="400" width="18" height="8"/>
+<rect class="pl-furn" x="628" y="400" width="18" height="8"/>
+<text class="pl-t" x="530" y="536" style="font-size:10.5px">CCTV · ALARMS · LOG</text>
+<text class="pl-t rm" x="680" y="372">POWER ROOM</text>
+<rect class="pl-furn" x="684" y="400" width="26" height="70"/>
+<rect class="pl-furn" x="722" y="400" width="26" height="70"/>
+<rect class="pl-furn" x="760" y="400" width="26" height="70"/>
+<text class="pl-t" x="680" y="536" style="font-size:10.5px">UPS · BATTERIES</text>
+<text class="pl-t rm" x="810" y="372">LOADING DOCK</text><line class="pl-gap" x1="940" y1="440" x2="940" y2="520"/><path class="pl-leaf" d="M940 440V520" stroke-dasharray="5 4"/><rect class="pl-furn" x="822" y="446" width="40" height="40"/><rect class="pl-furn" x="870" y="446" width="40" height="40"/><text class="pl-t" x="810" y="536" style="font-size:10.5px">GOODS INTERLOCK</text>
+<line class="pl-gap" x1="285" y1="550" x2="315" y2="550"/><line class="pl-leaf" x1="285" y1="550" x2="309.0" y2="534"/>
+<circle class="led" data-d="1" cx="327" cy="550" r="5.5"/>
+<line class="pl-gap" x1="285" y1="410" x2="315" y2="410"/><line class="pl-leaf" x1="285" y1="410" x2="309.0" y2="394"/>
+<circle class="led" data-d="2" cx="327" cy="410" r="5.5"/>
+<line class="pl-gap" x1="285" y1="350" x2="315" y2="350"/><line class="pl-leaf" x1="285" y1="350" x2="309.0" y2="334"/>
+<circle class="led" data-d="3" cx="327" cy="350" r="5.5"/>
+<line class="pl-gap" x1="380" y1="300" x2="410" y2="300"/><line class="pl-leaf" x1="380" y1="300" x2="404.0" y2="284"/>
+<circle class="led" data-d="4" cx="422" cy="300" r="5.5"/>
+<line class="pl-gap" x1="745" y1="300" x2="775" y2="300"/><line class="pl-leaf" x1="745" y1="300" x2="769.0" y2="284"/>
+<line class="pl-gap" x1="580" y1="350" x2="610" y2="350"/><line class="pl-leaf" x1="580" y1="350" x2="604.0" y2="366"/>
+<line class="pl-gap" x1="720" y1="350" x2="750" y2="350"/><line class="pl-leaf" x1="720" y1="350" x2="744.0" y2="366"/>
+<line class="pl-gap" x1="855" y1="350" x2="885" y2="350"/><line class="pl-leaf" x1="855" y1="350" x2="879.0" y2="366"/>
+<circle class="led" data-d="0" cx="96" cy="600" r="5.5"/>
+<g class="cam-g" data-x="42" data-y="42" data-a="40"><path class="cone" d="M0 0L104 -34A110 110 0 0 1 104 34Z"/><circle class="camdot" r="4"/></g>
+<g class="cam-g" data-x="958" data-y="42" data-a="140"><path class="cone" d="M0 0L104 -34A110 110 0 0 1 104 34Z"/><circle class="camdot" r="4"/></g>
+<g class="cam-g" data-x="958" data-y="588" data-a="220"><path class="cone" d="M0 0L104 -34A110 110 0 0 1 104 34Z"/><circle class="camdot" r="4"/></g>
+<g class="cam-g" data-x="240" data-y="566" data-a="-10"><path class="cone" d="M0 0L104 -34A110 110 0 0 1 104 34Z"/><circle class="camdot" r="4"/></g>
+<g class="cam-g" data-x="214" data-y="325" data-a="0"><path class="cone" d="M0 0L104 -34A110 110 0 0 1 104 34Z"/><circle class="camdot" r="4"/></g>
+<g class="cam-g" data-x="214" data-y="94" data-a="35"><path class="cone" d="M0 0L104 -34A110 110 0 0 1 104 34Z"/><circle class="camdot" r="4"/></g>
+<g class="cam-g" data-x="926" data-y="94" data-a="145"><path class="cone" d="M0 0L104 -34A110 110 0 0 1 104 34Z"/><circle class="camdot" r="4"/></g>
+<g class="cam-g" data-x="926" data-y="325" data-a="180"><path class="cone" d="M0 0L104 -34A110 110 0 0 1 104 34Z"/><circle class="camdot" r="4"/></g>
+<g class="cam-g" data-x="926" data-y="536" data-a="215"><path class="cone" d="M0 0L104 -34A110 110 0 0 1 104 34Z"/><circle class="camdot" r="4"/></g>
+<path class="sig" d="M395 300V325H595V350"/><path class="sig" d="M300 350V325"/><path class="sig" d="M96 600V618H595V550"/>
+<path class="route"/><path class="route-on"/>
+<g class="badge" data-z="1"><circle cx="74" cy="572" r="14"/><text x="74" y="576.5">L1</text></g>
+<g class="badge" data-z="2"><circle cx="262" cy="480" r="14"/><text x="262" y="484.5">L2</text></g>
+<g class="badge" data-z="3"><circle cx="446" cy="470" r="14"/><text x="446" y="474.5">L3</text></g>
+<g class="badge" data-z="4"><circle cx="246" cy="380" r="14"/><text x="246" y="384.5">L4</text></g>
+<g class="badge" data-z="5"><circle cx="440" cy="190" r="14"/><text x="440" y="194.5">L5</text></g>
+<g class="badge" data-z="6"><circle cx="595" cy="512" r="14"/><text x="595" y="516.5">L6</text></g>
+<circle class="dot-ring" r="12" cx="130" cy="636"/><circle class="dot" r="7" cx="130" cy="636"/>
+</svg>
+      <p class="plan-cap mono"><span>Generic layout drawn for this portfolio. Not a plan of any real site.</span><span><span><i style="background:var(--amber)"></i>Visitor route</span><span><i style="background:var(--bad)"></i>Door locked</span><span><i style="background:var(--ok)"></i>Door released</span><span><i style="background:var(--chalk)"></i>Camera</span></span></p>
+    </div>
+    <div class="lay-side">
+    <div class="lay-top">
+      <div><span class="mono" style="color:var(--amber)">01 · Defence in depth</span><h2 style="margin-top:12px">Six layers between the road and the rack</h2></div>
+      <div class="count tnum"><span id="laynum">01</span><small> / 06</small></div>
+    </div>
+    <div class="lay-rail" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="layers">
+
+      <article class="layer on">
+        <div><span class="mono code">L1 · Perimeter</span><h3>The boundary</h3>
+          <p class="mine" data-ev="Employment"><b class="mono">What I do here</b>Monitor camera systems and perimeter activity across the site.</p></div>
+        <div class="trio">
+          <div><span class="mono">Physical control</span>Fencing, gates and camera coverage define where the site starts and who is approaching it.</div>
+          <div><span class="mono">Cyber parallel</span>The network edge. A firewall and a fence answer the same question: what is allowed to reach the inside at all.</div>
+          <div><span class="mono">Evidence I would ask for</span>Camera coverage plan, records of faults and how long each blind spot lasted.</div>
+        </div>
+        <div class="refs"><span class="ref">ISO/IEC 27001 A.7.1</span><span class="ref">A.7.4</span><span class="ref">SOC 2 CC6.4</span></div>
+      </article>
+
+      <article class="layer">
+        <div><span class="mono code">L2 · Front desk</span><h3>Identity</h3>
+          <p class="mine" data-ev="Employment"><b class="mono">What I do here</b>Verify identity, vet clients and check contractor induction status before anyone goes further.</p></div>
+        <div class="trio">
+          <div><span class="mono">Physical control</span>A person is matched to photo ID and to an approved reason for being on site today.</div>
+          <div><span class="mono">Cyber parallel</span>Authentication and identity proofing. Every later control trusts whatever identity this step accepted.</div>
+          <div><span class="mono">Evidence I would ask for</span>A sample of visits traced back to the approval, with the ID check recorded for each one.</div>
+        </div>
+        <div class="refs"><span class="ref">ISO/IEC 27001 A.5.16</span><span class="ref">A.7.2</span><span class="ref">SOC 2 CC6.2</span></div>
+      </article>
+
+      <article class="layer">
+        <div><span class="mono code">L3 · Security office</span><h3>Authorisation</h3>
+          <p class="mine" data-ev="Employment"><b class="mono">What I do here</b>Issue access cards and keys and keep the access and key databases up to date.</p></div>
+        <div class="trio">
+          <div><span class="mono">Physical control</span>A card opens only the doors the work needs, for only as long as the work lasts.</div>
+          <div><span class="mono">Cyber parallel</span>Provisioning and least privilege in an IAM system. An unreturned card is an orphaned account.</div>
+          <div><span class="mono">Evidence I would ask for</span>Issued cards reconciled to returned cards, and access levels compared with work orders.</div>
+        </div>
+        <div class="refs"><span class="ref">ISO/IEC 27001 A.5.15</span><span class="ref">A.5.18</span><span class="ref">SOC 2 CC6.2</span><span class="ref">CC6.3</span></div>
+      </article>
+
+      <article class="layer">
+        <div><span class="mono code">L4 · Mantrap</span><h3>One at a time</h3>
+          <p class="mine" data-ev="Employment"><b class="mono">What I do here</b>Monitor anti-tailgating and mantrap controls on the way into restricted areas.</p></div>
+        <div class="trio">
+          <div><span class="mono">Physical control</span>Two interlocked doors let one authorised person through per cycle, so one card cannot admit two people.</div>
+          <div><span class="mono">Cyber parallel</span>Shared credentials and session hijacking. One approval should never carry a second, unknown user.</div>
+          <div><span class="mono">Evidence I would ask for</span>Mantrap alarm records, each with a recorded outcome, checked against camera review.</div>
+        </div>
+        <div class="refs"><span class="ref">ISO/IEC 27001 A.7.2</span><span class="ref">SOC 2 CC6.4</span></div>
+      </article>
+
+      <article class="layer">
+        <div><span class="mono code">L5 · Data hall</span><h3>Monitoring</h3>
+          <p class="mine" data-ev="Employment"><b class="mono">What I do here</b>Monitor restricted areas, review alarm warnings and coordinate contractor access, using the Gallagher access control system. Familiar with BMS.</p></div>
+        <div class="trio">
+          <div><span class="mono">Physical control</span>Inside the secure area, movement is watched and alarms raise anything outside the expected pattern.</div>
+          <div><span class="mono">Cyber parallel</span>Logging and monitoring. An alarm panel and a SIEM share one weakness: alerts that people learn to ignore.</div>
+          <div><span class="mono">Evidence I would ask for</span>The alarm log with an outcome and a response time against every entry, including the dull ones.</div>
+        </div>
+        <div class="refs"><span class="ref">ISO/IEC 27001 A.7.3</span><span class="ref">A.7.4</span><span class="ref">A.8.15</span><span class="ref">A.8.16</span><span class="ref">SOC 2 CC7.2</span></div>
+      </article>
+
+      <article class="layer">
+        <div><span class="mono code">L6 · Control room</span><h3>Accountability</h3>
+          <p class="mine" data-ev="Employment"><b class="mono">What I do here</b>Dispatch in-facility patrols and communicate urgent matters to Operations and management.</p></div>
+        <div class="trio">
+          <div><span class="mono">Physical control</span>What happened is written down, passed to the right person and kept, so the next shift and the next auditor can rely on it.</div>
+          <div><span class="mono">Cyber parallel</span>Incident management. Without a record there is no timeline, and without a timeline there is no lesson.</div>
+          <div><span class="mono">Evidence I would ask for</span>Escalation records showing who was told, when, and what was decided.</div>
+        </div>
+        <div class="refs"><span class="ref">ISO/IEC 27001 A.6.8</span><span class="ref">A.5.24 to A.5.26</span><span class="ref">SOC 2 CC7.3</span><span class="ref">CC7.4</span></div>
+      </article>
+
+    </div>
+    </div>
+  </div>
+</section>
+<div class="hazard" aria-hidden="true"></div>
+
+<!-- 02 CHAIN -->
+<section id="chain" class="sheet sec">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="num mono">02 · Physical to cyber</span><h2>How a held door becomes a data breach</h2></div>
+      <p>Encryption, patching and firewalls assume the attacker is outside the room. Pick a physical lapse and follow it to the cyber consequence, the control that stops it and the evidence that proves the control works.</p>
+    </div>
+    <div class="tabs" role="tablist" aria-label="Physical lapse">
+      <button type="button" role="tab" aria-selected="true" data-tab="0">Tailgating</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="1">Card not returned</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="2">Identity not verified</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="3">Alarm not followed up</button>
+    </div>
+    <div class="chain" id="chainbox" data-ev="Illustration" aria-live="polite">
+      <div><span class="mono">1 · Lapse</span><h4></h4><p></p></div>
+      <div><span class="mono">2 · What it hands over</span><h4></h4><p></p></div>
+      <div><span class="mono">3 · Cyber consequence</span><h4></h4><p></p></div>
+      <div><span class="mono">4 · Control that breaks the chain</span><h4></h4><p></p><p class="evi"></p></div>
+    </div>
+    <p class="note" style="margin-top:18px">General scenarios written to show reasoning. None describes an event, a weakness or a procedure at any site where I work.</p>
+  </div>
+</section>
+
+<!-- 03 CONTROLS -->
+<section id="controls" class="sec">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="num mono">03 · Statement of applicability</span><h2>Where I stand against the controls</h2></div>
+      <p>An ISMS declares which controls apply and how far each is implemented. This is the same exercise applied to me. Every row says whether I have worked inside the control, studied it, used it in a project, or not touched it yet.</p>
+    </div>
+    <div class="tally" id="tally"></div>
+    <div class="filters" role="group" aria-label="Filter controls by status">
+      <button type="button" class="mono" aria-pressed="true" data-f="all">All</button>
+      <button type="button" class="mono" aria-pressed="false" data-f="op"><i class="dot op"></i>Operational</button>
+      <button type="button" class="mono" aria-pressed="false" data-f="st"><i class="dot st"></i>Studied</button>
+      <button type="button" class="mono" aria-pressed="false" data-f="pr"><i class="dot pr"></i>Project</button>
+      <button type="button" class="mono" aria-pressed="false" data-f="no"><i class="dot no"></i>To develop</button>
+    </div>
+    <div class="scroll-x"><table class="soa"><thead><tr><th>Reference</th><th>Control</th><th>My basis</th><th>Status</th></tr></thead><tbody id="soa"></tbody></table></div>
+    <p class="note" style="margin-top:18px">The mapping of duties to control numbers is my own. Operational means I carry out the activity under site procedures. It does not mean I have audited the control or that any certification is mine.</p>
+  </div>
+</section>
+<div class="hazard" aria-hidden="true"></div>
+
+<!-- 04 LIFECYCLE -->
+<section id="lifecycle" class="sheet sec hsec">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="num mono">04 · How a real audit runs</span><h2>Eight stages, from mandate to follow-up</h2></div>
+      <p>This is the sequence a security audit of a data centre follows, whoever runs it. I have not led one. I have studied each stage and I work inside the controls these audits test.</p>
+    </div>
+    <div class="kinds" data-ev="Study">
+      <div><span class="mono">Certification</span><strong>ISO/IEC 27001</strong>Stage 1 reviews the documented ISMS. Stage 2 tests that it operates. Surveillance audits follow each year, with recertification every three years.</div>
+      <div><span class="mono">Attestation</span><strong>SOC 2 Type II</strong>An independent auditor tests controls over a period, often six to twelve months, and issues an opinion with every test and exception listed.</div>
+      <div><span class="mono">Compliance</span><strong>PCI DSS Requirement 9</strong>Where a site hosts cardholder data, an assessor tests physical access to it: entry controls, visitor handling and media.</div>
+      <div><span class="mono">Internal and customer</span><strong>Clause 9.2 and right to audit</strong>The operator audits itself on a planned programme. Tenants audit the operator under their contracts.</div>
+    </div>
+  </div>
+  <div class="hprog" aria-hidden="true"><i></i></div>
+  <div class="rail" id="stages" data-ev="Study"></div>
+  <p class="rail-cue mono">Scroll sideways for more →</p>
+</section>
+
+<!-- 05 FIELDWORK -->
+<section id="audit" class="sheet sec" style="border-top:4px solid var(--ink)">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="num mono">05 · Fieldwork</span><h2>Three audit exercises to try</h2></div>
+      <p>Each one is a task from the middle of a real audit: testing a sample, grading what was found and reviewing the policy behind it. These are the kinds of test I practise in Tickmark Academy.</p>
+    </div>
+    <div class="ex-head"><div><span class="mono">Exercise A · Testing</span><h3>Audit one day of an access log</h3></div><p>Eight entries from an invented site, tested against four criteria. Flag the rows you think are exceptions, then compare with my workpaper.</p></div>
+    <div class="audit-grid" data-ev="Fictional exercise">
+      <div class="criteria">
+        <h4>Criteria · Site access procedure (invented)</h4>
+        <ol>
+          <li><b>C1</b><span>Photo ID is verified against the booking before a card is issued.</span></li>
+          <li><b>C2</b><span>A contractor's induction is current on the day of access.</span></li>
+          <li><b>C3</b><span>Visitor cards are returned and signed in the same day.</span></li>
+          <li><b>C4</b><span>One person per mantrap cycle. Any alarm has a recorded follow-up.</span></li>
+        </ol>
+        <p style="font-size:13px;color:var(--ink-2);margin-top:14px">Log date 16 Nov 2026. Site, people and records are fictional.</p>
+      </div>
+      <div>
+        <div class="log">
+          <div class="log-head mono"><span>W/P ref A-01 · Visitor and contractor log</span><span id="flagcount">0 flagged</span></div>
+          <div class="scroll-x"><table class="lg"><thead><tr><th></th><th>In</th><th>Person</th><th>ID check</th><th>Induction</th><th>Card</th><th>Returned</th><th>Mantrap</th></tr></thead><tbody id="logbody"></tbody></table></div>
+          <div class="log-foot"><span style="font-size:13.5px;color:var(--ink-2)">Click a row to flag it as an exception.</span><span><button type="button" class="btn ghost" id="auditreset">Reset</button> <button type="button" class="btn" id="auditgo">Compare with my workpaper</button></span></div>
+        </div>
+        <div class="result" id="auditres" hidden>
+          <p class="score" id="auditscore"></p>
+          <div>
+            <p class="mono" style="margin-bottom:8px">One exception written up as a finding</p>
+            <div class="fiveC">
+              <div><span class="mono">Criteria</span>C2. A contractor's induction must be current on the day of access.</div>
+              <div><span class="mono">Condition</span>M. Tavita was issued card V-017 at 09:10 on 16 Nov. The induction register shows expiry on 2 Nov.</div>
+              <div><span class="mono">Cause</span>Not yet established. A hypothesis to test: expiry dates are not visible at the point a card is issued.</div>
+              <div><span class="mono">Consequence</span>A person without current site safety and security briefing worked in a controlled area.</div>
+              <div><span class="mono">Corrective action</span>Block card issue when induction has lapsed. Owner and due date to be agreed with site management.</div>
+            </div>
+          </div>
+          <p class="note">Four exceptions in eight rows says something about this day. It says little about the year. A conclusion on whether the control operated over a period needs a sample drawn across that period, which is the difference between a SOC 2 Type I and a Type II report.</p>
+        </div>
+      </div>
+    </div>
+    <div class="ex">
+      <div class="ex-head">
+        <div><span class="mono">Exercise B · Evaluation</span><h3>Grade five observations</h3></div>
+        <p>An auditor's notes from a fictional site tour. Decide how serious each one is, then see how I graded it and why. Auditors can differ on a grade. The reasoning has to hold up.</p>
+      </div>
+      <div data-ev="Fictional exercise">
+        <ol class="grade" id="grade"></ol>
+        <p class="gscore" id="gscore">0 of 5 graded</p>
+      </div>
+    </div>
+
+    <div class="ex">
+      <div class="ex-head">
+        <div><span class="mono">Exercise C · Policy analysis</span><h3>Review a weak access policy</h3></div>
+        <p>A policy an auditor cannot test is a policy nobody can prove they follow. Click each clause of this invented policy to read my review comment.</p>
+      </div>
+      <div class="policy" data-ev="Fictional exercise">
+        <div class="pdoc">
+          <div class="pdoc-h"><strong>Physical Access Control Policy</strong><span class="mono">POL-07 · Version 1.2 · Invented</span></div>
+          <div id="clauses"></div>
+        </div>
+        <aside class="pside">
+          <div><b class="big tnum" id="pcount">0 / 7</b><span>clauses reviewed</span></div>
+          <div id="ptally" class="mono">Testable 0 · Weak 0 · Gap 0</div>
+          <div><strong>What I check in any policy</strong>
+            <ol style="margin-top:8px">
+              <li>Who it applies to and where</li>
+              <li>A named role that owns each duty</li>
+              <li>A frequency or time limit that can be measured</li>
+              <li>The record that proves it happened</li>
+              <li>How exceptions are approved and expire</li>
+              <li>An owner and a review date that is current</li>
+            </ol>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 RISK -->
+<section id="risk" class="sec">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="num mono">06 · Risk analysis</span><h2>Rate the risk, then earn the reduction</h2></div>
+      <p>Pick a facility risk. Switch controls on and watch the rating move from inherent to residual on a five by five matrix. The appetite here is Medium or below.</p>
+    </div>
+    <div class="risk" data-ev="Fictional exercise">
+      <div>
+        <div class="rsel" id="rsel" role="group" aria-label="Risk scenario"></div>
+        <div class="rctl" id="rctl"></div>
+      </div>
+      <div>
+        <div class="mx-wrap"><span class="mono mx-y">Impact</span><div class="mx" id="mx"></div></div>
+        <p class="mono mx-x">Likelihood</p>
+        <div class="rout">
+          <div><span class="mono">Inherent</span><b class="tnum" id="rinh">16</b><small id="rinhb">High</small></div>
+          <div><span class="mono">Residual</span><b class="tnum" id="rres">16</b><small id="rresb">High</small></div>
+          <div><span class="mono">Against appetite</span><b id="rver" style="font-size:20px;line-height:1.15">Above</b><small id="rverb"></small></div>
+        </div>
+        <p class="rstmt" id="rstmt"></p>
+      </div>
+    </div>
+    <p class="note" style="margin-top:22px">Invented scenarios and scores. A real rating needs the organisation's own criteria for likelihood and impact, and evidence that each control operates. A control that exists on paper earns no reduction.</p>
+
+    <div class="pen">
+      <div class="ex-head">
+        <div><span class="mono" style="color:var(--amber)">Penetration testing · the governance side</span><h3 style="color:var(--chalk)">A test is only as useful as what happens to its findings</h3></div>
+        <p style="color:var(--fog)">I do not perform penetration tests. Two of the risks above start as test findings, PT-01 and PT-02. My part is to see that a test is authorised and scoped, and that each finding gets an owner and a retest.</p>
+      </div>
+      <div class="pen-grid" data-ev="Study">
+        <div><span class="mono" style="color:var(--amber)">Before</span><h4>Rules of engagement</h4>
+          <ul><li>Written authorisation from someone with authority over the site</li><li>Scope, exclusions and techniques agreed in advance</li><li>A time window, emergency contacts and a stop word</li><li>Safety limits: no forced entry, nothing that touches power or life safety</li></ul></div>
+        <div><span class="mono" style="color:var(--amber)">During</span><h4>What a physical test tries</h4>
+          <ul><li>Following staff through a controlled door</li><li>Talking past the front desk with a cover story</li><li>Using a found, borrowed or copied access card</li><li>Looking for unlocked racks, rooms and screens</li></ul></div>
+        <div><span class="mono" style="color:var(--amber)">After</span><h4>Where governance starts</h4>
+          <ul><li>Each finding is mapped to the control that failed</li><li>It enters the risk register with a rating and a named owner</li><li>A corrective action is agreed with a due date</li><li>The fix is retested before the finding is closed</li></ul></div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="hazard" aria-hidden="true"></div>
+
+<!-- 07 TEMPLATES -->
+<section id="templates" class="sheet sec hsec">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="num mono">07 · Working papers</span><h2>Six templates an audit runs on</h2></div>
+      <p>The formats I practise with in Tickmark Academy, filled in for a fictional data centre. Each one can be copied as plain text.</p>
+    </div>
+  </div>
+  <div class="hprog" aria-hidden="true"><i></i></div>
+  <div class="rail" id="papers" data-ev="Fictional exercise"></div>
+  <p class="rail-cue mono">Scroll sideways for more →</p>
+</section>
+
+<!-- 08 WORK -->
+<section id="work" class="sec hsec">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="num mono">08 · Independent work</span><h2>Projects, with their limits printed on them</h2></div>
+      <p>I am not a developer. I direct AI tools to build what I design, then check the result against sources. Each card ends with what the work does not prove.</p>
+    </div>
+  </div>
+  <div class="hprog" aria-hidden="true"><i></i></div>
+  <div class="rail" id="rail">
+    <article class="card" data-ev="Independent project">
+      <div class="card-top mono"><span>P-01</span><span>Learning portal</span></div>
+      <div class="card-body">
+        <h3>Tickmark Academy</h3>
+        <p>A self-study portal I built to take myself from beginner to working knowledge in internal audit, compliance and information security. It grew out of an earlier version, Audit Practice Academy.</p>
+        <ul>
+          <li>Role-based pathways: Internal Auditor, Compliance Officer, Information Security Auditor, Technology and Data Auditor</li>
+          <li>Lessons paired with practical templates: ISMS internal audit plan, Statement of Applicability extract, risk treatment plan, finding sheet in the 5 Cs format</li>
+          <li>Fictional workpaper simulations, including an ITGC leaver-access test and reading a SOC 2 Type II report</li>
+        </ul>
+        <div class="refs"><span class="ref">ISO/IEC 27001:2022</span><span class="ref">SOC 2</span><span class="ref">COSO</span><span class="ref">ISO 31000</span><span class="ref">NIST CSF 2.0</span><span class="ref">Essential Eight</span><span class="ref">NZ Privacy Act 2020</span><span class="ref">IIA Standards</span></div>
+        <a class="go mono" href="https://claude.ai/artifact/2wTnQy8zPxbKDvJy5879YH" target="_blank" rel="noopener">Open Tickmark Academy</a>
+      </div>
+      <div class="limit"><b class="mono">Limit</b> · A learning project built with AI assistance from public sources. It is not professional training, client audit delivery or a certification.</div>
+    </article>
+
+    <article class="card" data-ev="Independent project">
+      <div class="card-top mono"><span>P-02</span><span>Risk and evidence</span></div>
+      <div class="card-body">
+        <h3>UniClear risk register</h3>
+        <p>An AI-assisted board risk register for my own project, dated 2 October 2026. Thirteen risks across institutional, supplier, regulatory, capital, execution and reputation themes, each with probability, impact, proposed mitigation, an owner field and a monthly review cadence.</p>
+        <div class="rowx">
+          <div><span class="mono">Risk</span><span>Verification processes may not scale and could create privacy exposure.</span></div>
+          <div><span class="mono">Assessment</span><span>Medium probability, material impact.</span></div>
+          <div><span class="mono">Response</span><span>Minimise information collection and seek further privacy input.</span></div>
+          <div><span class="mono">Evidence limit</span><span>Owner is a placeholder. A proposed action is not a completed one.</span></div>
+        </div>
+        <p>A separate review tested the project's material claims against evidence. Unsupported exclusivity and blanket compliance statements were flagged for rewording or verification.</p>
+      </div>
+      <div class="limit"><b class="mono">Limit</b> · ISO/IEC 42001 was a reference only. No clause mapping, certification or live control effectiveness is established.</div>
+    </article>
+
+    <article class="card" data-ev="Independent project">
+      <div class="card-top mono"><span>P-03</span><span>Research tool</span></div>
+      <div class="card-body">
+        <h3>Fah</h3>
+        <p>A document and research application, built with AI assistance, that keeps every note linked to its source.</p>
+        <ul>
+          <li>Documentation separates source evidence, local or mocked checks, and live-provider outcomes</li>
+          <li>A recorded HTTP 503 from a live provider is logged as a failed request at that time. It is not treated as proof of an attack or of a root cause</li>
+        </ul>
+        <p>The habit this trained is the one audit depends on: say what the evidence shows, then stop.</p>
+      </div>
+      <div class="limit"><b class="mono">Limit</b> · A personal project. It is not production software and has had no independent security review.</div>
+    </article>
+
+    <article class="card" data-ev="Fictional exercise">
+      <div class="card-top mono"><span>P-04</span><span>Job simulations</span></div>
+      <div class="card-body">
+        <h3>Forage simulations</h3>
+        <p>Two completed virtual job simulations that walk through the tasks of a junior on a real team.</p>
+        <ul>
+          <li>EY Audit</li>
+          <li>BCG Introduction to Strategy Consulting</li>
+        </ul>
+      </div>
+      <div class="limit"><b class="mono">Limit</b> · Fictional learning exercises. They are separate from employment and from professional client audits.</div>
+    </article>
+  </div>
+  <p class="rail-cue mono">Scroll sideways for more →</p>
+</section>
+<div class="hazard" aria-hidden="true"></div>
+
+<!-- 06 RECORD -->
+<section id="record" class="sheet sec">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="num mono">09 · Record</span><h2>Experience and education</h2></div>
+      <p>The full record, most recent first. My background is in business, marketing and client work. The move into governance started with study and became real at the data-centre desk.</p>
+    </div>
+    <div class="rec-grid">
+      <div>
+        <h3 class="sub">Experience</h3>
+        <article class="job now" data-ev="Employment">
+          <div class="when">Oct 2026 to present<br>Casual</div>
+          <div><h3>Data Centre Concierge</h3><p class="org">Allied Security · Data centres, Auckland</p>
+            <ul>
+              <li>Provide security and confidential client service, applying identity-verification, client-vetting and physical access-control procedures</li>
+              <li>Issue access cards and keys, maintain the access and key databases, and coordinate contractor access and induction-status checks</li>
+              <li>Monitor restricted areas, camera systems and perimeter activity, including anti-tailgating and mantrap controls</li>
+              <li>Review alarm warnings, dispatch in-facility patrols and communicate urgent matters to Operations and management</li>
+              <li>Use the Gallagher access control system day to day for cardholder, access and alarm tasks</li>
+              <li>Operational familiarity with BMS and site procedures associated with SOC 2 and ISO/IEC 27001</li>
+            </ul></div>
+        </article>
+        <article class="job" data-ev="Employment">
+          <div class="when">Feb 2026 to Sept 2026</div>
+          <div><h3>Marketing Lead</h3><p class="org">Phaya Limited</p>
+            <ul>
+              <li>Prepared compliance and contract reporting, supported owner meetings and turned findings into practical recommendations</li>
+              <li>Reviewed potential facility hazards and equipment arrangements for a new location</li>
+              <li>Implemented GA4 tagging and reporting, and initiated a partnership proposal with Anytime Fitness Mt Albert</li>
+            </ul></div>
+        </article>
+        <article class="job" data-ev="Employment">
+          <div class="when">July 2025 to Oct 2025</div>
+          <div><h3>Intern, Operations and Research</h3><p class="org">Union Education &amp; Migration</p>
+            <ul><li>Researched audience needs, wrote Thai-language communication and contributed to shared content and events</li></ul></div>
+        </article>
+        <article class="job" data-ev="Employment">
+          <div class="when">Mar 2025 to May 2025</div>
+          <div><h3>Marketing Coordinator, Operations and Analytics</h3><p class="org">Brand Collective Ltd</p>
+            <ul><li>Handled phone and email enquiries, researched markets and coordinated external agency deliverables</li></ul></div>
+        </article>
+        <article class="job" data-ev="Employment">
+          <div class="when">Jan 2023 to Mar 2023</div>
+          <div><h3>Sales Representative</h3><p class="org">Atlas and Arrow</p>
+            <ul><li>Handled sensitive account-registration information, kept accurate records and checked documentation against company standards</li></ul></div>
+        </article>
+        <p class="earlier" data-ev="Employment"><strong>Earlier.</strong> Marketing Coordinator, Wandee (2019 to 2022). Digital Marketing Specialist, BaanKaew (2018 to 2021). Cashier and Waiter, Nine Thai Takeaway (2016 to 2021).</p>
+      </div>
+      <aside class="side">
+        <div>
+          <h3 class="sub">Education</h3>
+          <ul class="edu">
+            <li data-ev="Study · in progress"><strong>Postgraduate Diploma in Information Governance</strong><span>University of Auckland, online</span><span>Cybersecurity Techniques and Regulation · Technology and Compliance · Information Research in Practice · Information Ethics</span><span class="live">In progress · expected Sept 2027</span></li>
+            <li data-ev="Study · in progress"><strong>AI Cybersecurity &amp; Governance</strong><span>Columbia University, online</span><span class="live">In progress</span></li>
+            <li data-ev="Completed"><strong>Bachelor of Business (Marketing)</strong><span>Unitec, graduated 2025</span><span>Business Analytics · Information Systems and Applications · Operations Management and Compliance</span></li>
+            <li data-ev="Completed"><strong>Health Foundation certificate, Level 4</strong><span>Unitec</span></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="sub">Credentials</h3>
+          <ul class="plain" data-ev="Completed">
+            <li>NZ Certificate of Approval (COA), current</li>
+            <li>Google Project Management certificate</li>
+            <li>Google Digital Marketing and HubSpot Digital Marketing certificates</li>
+            <li>Clean, full NZ driver licence</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="sub">Working tools</h3>
+          <ul class="plain">
+            <li>Gallagher access control system, hands-on use</li>
+            <li>BMS, at an operational level</li>
+            <li>Excel formulas, filters and charts</li>
+            <li>Word, PowerPoint, Teams, GA4</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="sub">Also</h3>
+          <ul class="plain">
+            <li>Speaks English, Thai and Lao</li>
+            <li>New Zealand and Thai citizen</li>
+            <li>At Unitec: Student Representative, PASS Leader, Vice President of the Muay Thai Club, Football Team Manager</li>
+            <li>Volunteer, SPCA Auckland</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- 07 LIMITS -->
+<section id="limits" class="sec">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="num mono">10 · Scope exclusions</span><h2>What this portfolio does not claim</h2></div>
+      <p>An audit report states its scope limits. A portfolio in this field should too. These are the gaps I would close under supervision in a first governance role.</p>
+    </div>
+    <ul class="limits">
+      <li><span class="x">N/A</span><div><strong>I am not a hacker or a penetration tester</strong><span>My interest is in whether controls are designed well and proven to operate, not in breaking them.</span></div></li>
+      <li><span class="x">N/A</span><div><strong>I am not a software developer</strong><span>My projects, and this site, were built by directing AI tools. I design, specify and check.</span></div></li>
+      <li><span class="x">Gap</span><div><strong>No professional certifications yet</strong><span>I hold no ISO/IEC 27001 Lead Auditor, CISA, CISM or similar credential.</span></div></li>
+      <li><span class="x">Gap</span><div><strong>No client audit or assessment delivered</strong><span>My audit and risk work is study, simulation and independent projects.</span></div></li>
+      <li><span class="x">Gap</span><div><strong>No hands-on digital IAM, DLP or SOC work</strong><span>My access-control experience is physical. Azure, Microsoft 365 security and cyber incident response are still to learn in practice.</span></div></li>
+      <li><span class="x">Gap</span><div><strong>Frameworks studied, not yet applied for a client</strong><span>NZISM, NIST CSF, CIS Controls and PCI DSS. My SOC 2 and ISO/IEC 27001 exposure comes through site procedures.</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="out sec">
+  <div class="wrap">
+    <span class="mono">Sign out · Contact</span>
+    <h2 style="margin-top:14px">Hand me the checklist.</h2>
+    <p style="max-width:34em;margin-top:20px;font-size:19px;line-height:1.45">I am looking for a junior or graduate role in governance, risk and compliance, information security assurance or internal audit in Auckland.</p>
+    <p><a class="mail" href="mailto:atichat.khanma2000@gmail.com">atichat.khanma2000@gmail.com</a><button type="button" class="copy" id="copymail">Copy</button></p>
+    <div class="row"><span>Kelston, Auckland</span><span>New Zealand and Thai citizen</span><span>Available for interview in person or online</span></div>
+  </div>
+</section>
+</main>
+
+<footer><span>Atichat Khanma · Compliance and governance portfolio · November 2026</span><span>Designed by me, built with AI assistance. Motion by GSAP ScrollTrigger. Corridor clip encoded with FFmpeg. All audit exercises are fictional.</span></footer>
+
+<div class="evbar" aria-hidden="true">
+  <strong class="mono" style="color:var(--amber)">Evidence basis</strong>
+  <span><i style="background:var(--ok)"></i>Employment: done at work</span>
+  <span><i style="background:#6FA8DC"></i>Study: in progress</span>
+  <span><i style="background:var(--amber)"></i>Independent project or completed credential</span>
+  <span><i style="background:var(--chalk)"></i>Fictional exercise or illustration</span>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
+<script>
+(function () {
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var hasGsap = typeof window.gsap !== 'undefined' && typeof window.ScrollTrigger !== 'undefined';
+  var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (hasGsap) gsap.registerPlugin(ScrollTrigger);
+
+  /* ----- Clocks (Auckland time) ----- */
+  var fmt; try { fmt = new Intl.DateTimeFormat('en-NZ', { timeZone: 'Pacific/Auckland', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }); } catch (e) { fmt = null; }
+  function tick() {
+    var t = fmt ? fmt.format(new Date()) : new Date().toTimeString().slice(0, 8);
+    $('#clock').textContent = 'AKL ' + t; $('#osdclock').textContent = t; var g = $('#gclock'); if (g) g.textContent = t;
+  }
+  tick(); setInterval(tick, 1000);
+
+  /* ----- Controls matrix data ----- */
+  var LABEL = { op: 'Operational', st: 'Studied', pr: 'Project', no: 'To develop' };
+  var SOA = [
+    ['ISO 27001 A.7.1', 'Physical security perimeters', 'Perimeter and camera monitoring at two data centres.', 'op'],
+    ['ISO 27001 A.7.2', 'Physical entry', 'Identity verification, card and key issue, mantrap and anti-tailgating controls.', 'op'],
+    ['ISO 27001 A.7.3', 'Securing offices, rooms and facilities', 'Monitoring of restricted areas and contractor access.', 'op'],
+    ['ISO 27001 A.7.4', 'Physical security monitoring', 'Alarm-warning review and camera systems, using Gallagher. Familiar with BMS.', 'op'],
+    ['ISO 27001 A.5.16', 'Identity management', 'Physical identity checks and client vetting. Digital identity platforms not yet.', 'op'],
+    ['ISO 27001 A.5.15 / A.5.18', 'Access control and access rights', 'Maintain access and key databases. Studied the quarterly access-review test.', 'op'],
+    ['ISO 27001 A.6.8', 'Information security event reporting', 'Urgent communication to Operations and management.', 'op'],
+    ['SOC 2 CC6.4', 'Physical access to facilities', 'Daily work under site procedures associated with SOC 2.', 'op'],
+    ['ISO 27001 Cl. 6.1', 'Risk assessment, treatment and the SoA', 'Tickmark Academy exercises. Applied the method in the UniClear risk register.', 'pr'],
+    ['ISO/IEC 42001', 'AI management system', 'Used as a reference for UniClear. No clause mapping completed.', 'pr'],
+    ['ISO 27001 Cl. 9.2', 'ISMS internal audit', 'Built and practised with an ISMS internal audit plan template.', 'st'],
+    ['SOC 2 Type II', 'Reading and relying on a SOC report', 'Self-study exercise on reviewing a Type II report.', 'st'],
+    ['ISO 27001 A.5.19', 'Information security in supplier relationships', 'Self-study: third-party due diligence checklist.', 'st'],
+    ['NZ Privacy Act 2020', 'Information privacy principles', 'Self-study alongside Information Ethics at the University of Auckland.', 'st'],
+    ['AI governance', 'AI risk and security governance', 'Columbia University AI Cybersecurity and Governance, in progress.', 'st'],
+    ['NIST CSF 2.0 · Essential Eight · NZISM', 'Framework assessment', 'Studied in outline. Not yet applied in an assessment.', 'no'],
+    ['ISO 27001 A.5.24 to A.5.26', 'Cyber incident management', 'Physical escalation experience only. Digital response to learn.', 'no'],
+    ['ISO 27001 A.8', 'Technological controls, digital IAM, DLP', 'No production administration experience.', 'no'],
+    ['PCI DSS', 'Payment card data security', 'Not yet studied in depth.', 'no']
+  ];
+  var counts = { op: 0, st: 0, pr: 0, no: 0 };
+  $('#soa').innerHTML = SOA.map(function (r) {
+    counts[r[3]]++;
+    return '<tr data-s="' + r[3] + '"><td>' + r[0] + '</td><td>' + r[1] + '</td><td>' + r[2] + '</td><td><span class="status"><i class="dot ' + r[3] + '"></i>' + LABEL[r[3]] + '</span></td></tr>';
+  }).join('');
+  $('#tally').innerHTML = ['op', 'st', 'pr', 'no'].map(function (k) {
+    return '<div><b class="tnum" data-n="' + counts[k] + '">' + counts[k] + '</b><span><i class="dot ' + k + '"></i>' + LABEL[k] + '</span></div>';
+  }).join('');
+  $$('.filters button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      $$('.filters button').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      var f = b.getAttribute('data-f');
+      $$('#soa tr').forEach(function (tr) { tr.hidden = !(f === 'all' || tr.getAttribute('data-s') === f); });
+      if (hasGsap) { if (!calm) gsap.from('#soa tr:not([hidden])', { opacity: 0, x: -12, duration: .3, stagger: .025, clearProps: 'all' }); ScrollTrigger.refresh(); }
+    });
+  });
+
+  /* ----- Chain tabs ----- */
+  var CH = [
+    [['A second person follows a cardholder', 'An authorised engineer badges in. Someone walks through behind them before the door closes.'],
+     ['An unlogged person in a restricted area', 'The access log shows one entry. Two people are inside, and one of them has no identity on record.'],
+     ['Hands on the hardware', 'A device on a spare port, a drive pulled from a rack or a console left logged in. Network defences are bypassed because the intruder is already behind them.'],
+     ['One person per cycle', 'An interlocked mantrap with anti-tailgating detection, backed by staff who challenge.', 'Evidence: mantrap alarms each with a recorded outcome, and door counts compared with the access log.']],
+    [['A contractor leaves with a visitor card', 'The job finishes late. The card goes home in a pocket and nobody reconciles the register.'],
+     ['A valid credential with no owner', 'The card still opens doors. The system treats whoever holds it as the contractor.'],
+     ['Access that looks legitimate', 'A later entry is logged under a real name, so it raises no alert and attribution is lost. In IAM terms this is an orphaned account.'],
+     ['Same-day reconciliation', 'Cards expire at the end of the booking, and issued cards are matched to returned cards before close.', 'Evidence: the issue and return register, and deactivation times for cards not returned.']],
+    [['Someone says they are from the vendor', 'A confident visitor in a branded shirt arrives without a booking and asks to be let in to fix a fault.'],
+     ['A card issued to the wrong person', 'Every control after the desk now trusts an identity nobody verified.'],
+     ['Social engineering succeeds offline', 'The attacker gains the same access a phishing email aims for, without touching a mail filter.'],
+     ['Verify against an approved booking', 'Photo ID is matched to a booking the client made in advance, with a call back when anything differs.', 'Evidence: a sample of visits traced to bookings, with the ID check recorded on each.']],
+    [['A door-held-open warning is acknowledged', 'The alarm is cleared on screen. Nobody looks at the door and nothing is written down.'],
+     ['A habit of ignoring alerts', 'Real events and false alarms start to look the same to the people watching.'],
+     ['No timeline when it matters', 'When an incident is investigated there is no record of what was seen or when. Detection existed and response did not.'],
+     ['Every alarm gets an outcome', 'Each warning is checked, recorded and escalated to Operations by severity.', 'Evidence: an alarm log with outcome and response time against every entry.']]
+  ];
+  var cells = $$('#chainbox > div');
+  function showChain(i) {
+    CH[i].forEach(function (c, k) { $('h4', cells[k]).textContent = c[0]; $$('p', cells[k])[0].textContent = c[1]; if (k === 3) $('.evi', cells[k]).textContent = c[2]; });
+    $$('.tabs button').forEach(function (b, k) { b.setAttribute('aria-selected', k === i ? 'true' : 'false'); });
+    if (hasGsap && !calm) gsap.fromTo(cells, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: .4, stagger: .09, ease: 'power2.out', overwrite: true });
+  }
+  $$('.tabs button').forEach(function (b, i) { b.addEventListener('click', function () { showChain(i); }); });
+  showChain(0);
+
+  /* ----- Audit exercise ----- */
+  var LOG = [
+    ['08:02', 'R. Patel · HVAC contractor', 'Verified', 'Valid to 14 Mar 2027', 'V-014', '11:40', 'Normal', 0, 'No exception. All four criteria met.'],
+    ['08:31', 'L. Chen · Client engineer', 'Verified', 'Valid to 30 Jun 2027', 'C-203', '16:05', 'Normal', 0, 'No exception. All four criteria met.'],
+    ['09:10', 'M. Tavita · Electrical contractor', 'Verified', 'Expired 2 Nov 2026', 'V-017', '15:30', 'Normal', 1, 'Exception to C2. Induction lapsed 14 days before entry.'],
+    ['09:48', 'S. Novak · Visitor', 'Not recorded', 'Not required, escorted', 'V-019', '10:55', 'Normal', 1, 'Exception to C1. No record that ID was checked before the card was issued.'],
+    ['10:15', 'A. Rahimi · Client engineer', 'Verified', 'Valid to 9 Jan 2027', 'C-188', '17:12', 'Normal', 0, 'No exception. All four criteria met.'],
+    ['11:02', 'J. Williams · Fire systems contractor', 'Verified', 'Valid to 21 Aug 2027', 'V-020', '14:20', 'Normal', 0, 'No exception. All four criteria met.'],
+    ['13:27', 'K. Ito · Visitor', 'Verified', 'Not required, escorted', 'V-022', 'Not returned', 'Normal', 1, 'Exception to C3. Card still outstanding at close of day.'],
+    ['14:40', 'D. Moana · Client engineer', 'Verified', 'Valid to 2 May 2027', 'C-207', '18:01', 'Alarm: 2 persons. Acknowledged, no follow-up', 1, 'Exception to C4. Two people detected in one cycle and no follow-up recorded.']
+  ];
+  var lb = $('#logbody');
+  lb.innerHTML = LOG.map(function (r, i) {
+    return '<tr data-i="' + i + '"><td><button type="button" class="flag" aria-label="Flag row ' + (i + 1) + ' as an exception" aria-pressed="false">!</button></td><td>' + r[0] + '</td><td>' + r[1] + '<span class="why">' + r[8] + '</span></td><td>' + r[2] + '</td><td>' + r[3] + '</td><td>' + r[4] + '</td><td>' + r[5] + '</td><td>' + r[6] + '</td></tr>';
+  }).join('');
+  var done = false;
+  function flags() { return $$('tr.sel', lb).length; }
+  lb.addEventListener('click', function (e) {
+    var tr = e.target.closest('tr'); if (!tr || done) return;
+    tr.classList.toggle('sel'); $('.flag', tr).setAttribute('aria-pressed', tr.classList.contains('sel') ? 'true' : 'false');
+    $('#flagcount').textContent = flags() + ' flagged';
+  });
+  $('#auditgo').addEventListener('click', function () {
+    if (done) return; done = true; var hit = 0, fp = 0;
+    $$('tr', lb).forEach(function (tr) {
+      var ex = LOG[+tr.getAttribute('data-i')][7], sel = tr.classList.contains('sel');
+      tr.classList.remove('sel');
+      if (ex && sel) { tr.classList.add('hit'); hit++; } else if (ex) { tr.classList.add('miss'); } else if (sel) { tr.classList.add('fp'); fp++; }
+    });
+    var msg = 'You found ' + hit + ' of 4 exceptions';
+    msg += fp ? ', and flagged ' + fp + ' clean ' + (fp === 1 ? 'row' : 'rows') + '.' : hit === 4 ? ' with no false flags. Clean work.' : '. Missed rows are marked in yellow.';
+    $('#auditscore').textContent = msg; $('#auditres').hidden = false;
+    if (hasGsap) { if (!calm) gsap.from('#auditres > *', { opacity: 0, y: 18, duration: .5, stagger: .12 }); ScrollTrigger.refresh(); }
+  });
+  $('#auditreset').addEventListener('click', function () {
+    done = false; $$('tr', lb).forEach(function (tr) { tr.className = ''; $('.flag', tr).setAttribute('aria-pressed', 'false'); });
+    $('#flagcount').textContent = '0 flagged'; $('#auditres').hidden = true; if (hasGsap) ScrollTrigger.refresh();
+  });
+
+  /* ----- Lifecycle stages ----- */
+  var STAGES = [
+    ['Mandate and scope', 'Agree what is being audited, against which criteria, for which period, and who receives the report.', 'Physical and environmental security at one colocation site, 1 July to 30 June, against ISO/IEC 27001 Annex A.7 and SOC 2 CC6.4.', 'Terms of reference'],
+    ['Risk-based planning', 'Rank what could go wrong and spend the audit hours there. Low-risk areas get a lighter touch.', 'Visitor access and contractor management get more testing than grounds maintenance.', 'Audit plan and risk and control matrix'],
+    ['Evidence request', 'Send the list of documents and records needed before fieldwork starts, so site time is spent testing.', 'Access policy, cardholder list, visitor logs for the period, alarm logs, CCTV retention settings, induction register, maintenance records.', 'Evidence request list'],
+    ['Walkthrough', 'Follow one real transaction from start to finish to confirm the control is designed the way the procedure says.', 'Follow one contractor from booking to induction check, card issue, escort, work and card return.', 'Walkthrough record'],
+    ['Testing', 'Test whether the control operated across the whole period. Four methods: inquiry, observation, inspection and reperformance.', 'Select 25 visits spread over twelve months. Trace each to its approval, ID check and card return.', 'Test workpapers'],
+    ['Evaluation', 'Grade each exception and find its root cause. One late card is a lapse. A review that never happens is a failed control.', 'Under ISO/IEC 27001: major nonconformity, minor nonconformity or opportunity for improvement.', 'Finding sheets and nonconformity reports'],
+    ['Reporting', 'Present findings at a closing meeting, collect management responses and issue the report.', 'A certification body recommends for or against certification. A SOC 2 auditor issues an opinion and lists each test with its result.', 'Audit report'],
+    ['Follow-up', 'Check that corrective actions were done and that they worked. An action marked complete is a claim until it is tested.', 'Retest the card-return control three months after the fix. The next surveillance audit looks again.', 'Action tracker and retest evidence']
+  ];
+  $('#stages').innerHTML = STAGES.map(function (s, i) {
+    return '<article class="stage"><div class="stage-n tnum">0' + (i + 1) + '</div><h3>' + s[0] + '</h3><p>' + s[1] + '</p><div class="stage-eg"><span class="mono">At a data centre</span>' + s[2] + '</div><div class="stage-out"><span class="mono">Produces</span>' + s[3] + '</div></article>';
+  }).join('');
+
+  /* ----- Exercise B: grading ----- */
+  var GL = { ok: 'Conforms', ofi: 'Improvement', minor: 'Minor NC', major: 'Major NC' };
+  var OBS = [
+    ['Of 25 sampled visitor log entries, one has no escort name. The other 24 are complete.', 'minor', 'Minor nonconformity. The control works and failed once. It needs correcting, and it does not put the whole control in doubt.'],
+    ['No access rights review has been done for the data hall in 14 months. The procedure requires one every quarter.', 'major', 'Major nonconformity. The control has not operated at all for four cycles, so nobody can say who should still have access.'],
+    ['CCTV retention is set to 90 days, as the policy requires. Checked on three cameras chosen by the auditor.', 'ok', 'Conforms. The setting matches the requirement and the auditor chose the sample.'],
+    ['Fire suppression was inspected on schedule. The certificate is in a technician\'s email and not in the maintenance system.', 'ofi', 'Opportunity for improvement. The requirement was met and evidence exists. The weakness is that it depends on one person\'s inbox.'],
+    ['During the tour, the loading dock interlock was held open with a wedge. Staff said this is normal during deliveries.', 'major', 'Major nonconformity. A key control is being defeated as accepted practice, which leaves a direct route into the building.']
+  ];
+  var graded = 0, matched = 0;
+  $('#grade').innerHTML = OBS.map(function (o, i) {
+    return '<li data-i="' + i + '"><span class="gn">O-0' + (i + 1) + '</span><div><p class="obs">' + o[0] + '</p><p class="why">' + o[2] + '</p></div><div class="gbtns">' +
+      ['ok', 'ofi', 'minor', 'major'].map(function (k) { return '<button type="button" data-k="' + k + '">' + GL[k] + '</button>'; }).join('') + '</div></li>';
+  }).join('');
+  $('#grade').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return; var li = b.closest('li'); if (li.classList.contains('done')) return;
+    var key = OBS[+li.getAttribute('data-i')][1], pick = b.getAttribute('data-k');
+    li.classList.add('done'); graded++; if (pick === key) matched++;
+    $$('button', li).forEach(function (x) { x.disabled = true; var k = x.getAttribute('data-k'); if (k === key) x.classList.add('key'); else if (k === pick) x.classList.add('wrong'); });
+    $('#gscore').textContent = graded + ' of 5 graded · ' + matched + ' match my grading';
+    if (hasGsap) { if (!calm) gsap.from($('.why', li), { opacity: 0, y: 8, duration: .35 }); ScrollTrigger.refresh(); }
+  });
+
+  /* ----- Exercise C: policy review ----- */
+  var VL = { ok: 'Testable', weak: 'Weak', gap: 'Gap' };
+  var POL = [
+    ['Purpose. This policy ensures the security of the facility.', 'weak', 'No scope. It should name the sites, the areas and the people it covers: staff, contractors, visitors and tenants.'],
+    ['Access to the data hall is restricted to authorised personnel.', 'weak', 'Who authorises, and where is that recorded? Without an approver and a record, an auditor cannot test the word "authorised".'],
+    ['Access rights shall be reviewed regularly.', 'gap', '"Regularly" cannot be tested. State the frequency, the role that performs the review and the record kept. This is the control ISO/IEC 27001 A.5.18 expects.'],
+    ['Visitors must be escorted at all times and sign the visitor log.', 'ok', 'Specific and observable. An auditor can watch it happen and inspect the log. I would add identity verification before entry.'],
+    ['Lost access cards should be reported as soon as possible.', 'weak', '"Should" and "as soon as possible" leave it to the individual. Set a time limit, say who to report to, and require the card to be disabled.'],
+    ['Exceptions to this policy may be granted by management.', 'gap', 'No named role, no record and no expiry. Unrecorded exceptions are how a policy stops describing what happens.'],
+    ['Owner: Facilities. Last reviewed: March 2023.', 'gap', 'The owner is a department, so nobody is accountable. The last review is more than three years old. Policies need review at planned intervals.']
+  ];
+  var seen = { ok: 0, weak: 0, gap: 0 }, nseen = 0;
+  $('#clauses').innerHTML = POL.map(function (p, i) {
+    return '<button type="button" class="clause v-' + p[1] + '" aria-expanded="false"><b>' + (i + 1) + '.0</b><span>' + p[0] + '</span><span class="cm"><span class="vchip">' + VL[p[1]] + '</span>' + p[2] + '</span></button>';
+  }).join('');
+  $$('.clause').forEach(function (c, i) {
+    c.addEventListener('click', function () {
+      if (c.classList.contains('open')) return;
+      c.classList.add('open'); c.setAttribute('aria-expanded', 'true'); nseen++; seen[POL[i][1]]++;
+      $('#pcount').textContent = nseen + ' / 7';
+      $('#ptally').textContent = 'Testable ' + seen.ok + ' · Weak ' + seen.weak + ' · Gap ' + seen.gap;
+      if (hasGsap) { if (!calm) gsap.from($('.cm', c), { opacity: 0, y: 6, duration: .3 }); ScrollTrigger.refresh(); }
+    });
+  });
+
+  /* ----- Risk matrix ----- */
+  var RISKS = [
+    { id: 'R-01', n: 'Tailgating into the data hall', src: 'From physical test finding PT-02', L: 4, I: 4, c: [['Interlocked mantrap, one person per cycle', 2, 0], ['Tailgate alarm with recorded follow-up', 1, 0], ['Locked racks inside the hall', 0, 1]] },
+    { id: 'R-02', n: 'Pretext entry at the front desk', src: 'From physical test finding PT-01', L: 3, I: 4, c: [['Entry only against a pre-approved booking', 1, 0], ['Call back to the client when details differ', 1, 0], ['Escort required for all visitors', 0, 1]] },
+    { id: 'R-03', n: 'Contractor card not returned', src: 'From internal audit', L: 4, I: 3, c: [['Card expires at the end of the booking', 2, 0], ['Daily issue and return reconciliation', 1, 0], ['Card zoned to the work order only', 0, 1]] },
+    { id: 'R-04', n: 'Door alarms acknowledged without a check', src: 'From alarm log review', L: 4, I: 3, c: [['Outcome required before an alarm can close', 1, 0], ['Weekly supervisor review of the alarm log', 1, 0], ['Nuisance alarms tuned out at source', 1, 0]] },
+    { id: 'R-05', n: 'Mains failure during generator maintenance', src: 'From resilience review', L: 2, I: 5, c: [['Redundant UPS carries the full load', 0, 2], ['Maintenance only under change control', 1, 0], ['Monthly generator load test', 0, 1]] }
+  ];
+  var rcur = 0, ron = {};
+  function band(s) { return s >= 20 ? ['Extreme', 'b-ext'] : s >= 10 ? ['High', 'b-high'] : s >= 5 ? ['Medium', 'b-med'] : ['Low', 'b-low']; }
+  (function () {
+    var h = '';
+    for (var i = 5; i >= 1; i--) { h += '<span class="ax">' + i + '</span>'; for (var l = 1; l <= 5; l++) h += '<div class="cell ' + band(l * i)[1] + '" id="c' + l + i + '">' + (l * i) + '</div>'; }
+    h += '<span class="ax"></span>'; for (var k = 1; k <= 5; k++) h += '<span class="ax">' + k + '</span>';
+    $('#mx').innerHTML = h;
+    $('#rsel').innerHTML = RISKS.map(function (r, i) { return '<button type="button" aria-pressed="' + (i === 0) + '" data-i="' + i + '"><span>' + r.id + '</span><div>' + r.n + '<small>' + r.src + '</small></div></button>'; }).join('');
+  })();
+  function riskDraw(move) {
+    var r = RISKS[rcur], L = r.L, I = r.I, used = 0;
+    r.c.forEach(function (c, i) { if (ron[i]) { L -= c[1]; I -= c[2]; used++; } });
+    L = Math.max(1, L); I = Math.max(1, I);
+    $$('.mk').forEach(function (m) { m.remove(); });
+    var same = L === r.L && I === r.I;
+    $('#c' + r.L + r.I).insertAdjacentHTML('beforeend', '<span class="mk ' + (same ? 'both' : 'inh') + '">' + (same ? 'I=R' : 'I') + '</span>');
+    if (!same) $('#c' + L + I).insertAdjacentHTML('beforeend', '<span class="mk res">R</span>');
+    var si = r.L * r.I, sr = L * I, ok = sr < 10;
+    $('#rinh').textContent = si; $('#rinhb').textContent = band(si)[0] + ' · L' + r.L + ' × I' + r.I;
+    $('#rres').textContent = sr; $('#rresb').textContent = band(sr)[0] + ' · L' + L + ' × I' + I;
+    var v = $('#rver'); v.textContent = ok ? 'Within appetite' : 'Above appetite'; v.className = ok ? 'verdict-ok' : 'verdict-no';
+    $('#rverb').textContent = ok ? 'Accept, monitor and review monthly' : 'Treat further, or a named owner formally accepts it';
+    $('#rstmt').textContent = used === 0 ? 'No controls applied yet. This is the inherent risk: what the exposure would be if nothing were done.' : used + ' of ' + r.c.length + ' controls applied. The residual rating only holds if there is evidence each one operates.';
+    if (move && hasGsap && !calm) gsap.from('.mk', { scale: 0, duration: .35, ease: 'back.out(2)' });
+  }
+  function riskPick(i) {
+    rcur = i; ron = {};
+    $$('#rsel button').forEach(function (b, k) { b.setAttribute('aria-pressed', k === i ? 'true' : 'false'); });
+    $('#rctl').innerHTML = '<h4>Controls for ' + RISKS[i].id + '</h4>' + RISKS[i].c.map(function (c, k) {
+      return '<label for="rc' + k + '"><input type="checkbox" id="rc' + k + '" data-k="' + k + '"><span>' + c[0] + '</span><em>' + (c[1] ? 'Likelihood −' + c[1] : 'Impact −' + c[2]) + '</em></label>';
+    }).join('');
+    riskDraw(true);
+  }
+  $('#rsel').addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) riskPick(+b.getAttribute('data-i')); });
+  $('#rctl').addEventListener('change', function (e) { var k = e.target.getAttribute('data-k'); if (k !== null) { ron[k] = e.target.checked; riskDraw(true); } });
+  riskPick(0);
+
+  /* ----- Templates ----- */
+  var TPL = [
+    ['T-01', 'Audit terms of reference', [['Engagement', 'Physical and environmental security, Site A'], ['Objective', 'Assess whether physical access controls are designed and operating effectively'], ['Criteria', 'ISO/IEC 27001:2022 A.7.1 to A.7.4, A.5.15, A.5.18. Site access procedure'], ['Period', '1 July 2025 to 30 June 2026'], ['In scope', 'Perimeter, reception, mantraps, data halls, loading dock'], ['Out of scope', 'Logical access. Tenant equipment'], ['Methods', 'Inquiry, observation, inspection, reperformance'], ['Reports to', 'Site manager. Summary to the audit committee']]],
+    ['T-02', 'Evidence request list', [['01', 'Access control policy and site access procedure, approved versions'], ['02', 'Active cardholders with access levels, at period end'], ['03', 'Visitor and contractor logs for the period'], ['04', 'Access rights review records, each quarter'], ['05', 'Alarm and door-event logs, with outcomes'], ['06', 'CCTV coverage plan and retention settings'], ['07', 'Induction register'], ['08', 'Maintenance records: UPS, generators, fire suppression, cooling'], ['09', 'Incident register and escalation records']]],
+    ['T-03', 'Control test workpaper', [['Control', 'Visitor identity is verified against an approved booking before a card is issued'], ['Testing', 'Operating effectiveness'], ['Population', '4,180 visits in the period'], ['Sample', '25, selected at random across all twelve months'], ['Attributes', 'A booking approved in advance. B ID check recorded. C card level matches booking. D card returned same day'], ['Result', '23 of 25 passed all attributes. 2 exceptions on D'], ['Conclusion', 'Operating with exceptions. See NCR-03'], ['Sign-off', 'Prepared by and date. Reviewed by and date']]],
+    ['T-04', 'Nonconformity report', [['Reference', 'NCR-03'], ['Grade', 'Minor'], ['Requirement', 'ISO/IEC 27001:2022 A.7.2. Site access procedure 4.3'], ['Statement', 'Visitor cards were not returned on the day of issue in 2 of 25 sampled visits'], ['Evidence', 'Visits on 14 Aug and 3 Feb. Card register shows return 2 and 5 days later'], ['Root cause', 'For the auditee to establish'], ['Corrective action', 'Owner and due date to be agreed'], ['Verification', 'Retest a sample of 25 three months after the fix']]],
+    ['T-05', 'Risk register entry', [['Risk ID', 'R-03'], ['Cause', 'Contractor cards are not always returned at the end of a job'], ['Event', 'An unauthorised person enters a restricted area with a live card'], ['Consequence', 'Theft of or tampering with client equipment'], ['Inherent', 'Likelihood 4 × impact 3 = 12, High'], ['Controls', 'Card expiry at end of booking. Daily reconciliation'], ['Residual', 'Likelihood 1 × impact 3 = 3, Low'], ['Owner', 'Site security manager'], ['Review', 'Monthly']]],
+    ['T-06', 'Pen test rules of engagement', [['Authorisation', 'Signed by an executive with authority over the site. Testers carry the letter'], ['Scope', 'Named buildings and entrances. Tailgating and pretexting allowed'], ['Exclusions', 'No forced entry. No tenant cages. Nothing that affects power or life safety'], ['Window', 'Agreed dates and hours. A short list of people who know'], ['Contacts', 'A 24-hour number on each side and a stop word'], ['Evidence', 'Photos of agreed items only. No client data removed'], ['Reporting', 'Each finding graded and mapped to a control and a risk owner'], ['Retest', 'Date agreed before the test begins']]]
+  ];
+  $('#papers').innerHTML = TPL.map(function (t, i) {
+    return '<article class="paper"><div class="paper-h"><strong>' + t[1] + '</strong><span class="mono">' + t[0] + '</span></div><dl>' + t[2].map(function (r) { return '<div><dt>' + r[0] + '</dt><dd>' + r[1] + '</dd></div>'; }).join('') + '</dl><div class="paper-f"><span>Fictional example</span><button type="button" data-t="' + i + '">Copy as text</button></div></article>';
+  }).join('');
+  $('#papers').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return; var t = TPL[+b.getAttribute('data-t')];
+    var txt = t[1].toUpperCase() + ' (' + t[0] + ')\n\n' + t[2].map(function (r) { return r[0] + ': ' + r[1]; }).join('\n');
+    try { navigator.clipboard.writeText(txt).then(function () { b.textContent = 'Copied'; }, function () { b.textContent = 'Copy not allowed here'; }); } catch (err) { b.textContent = 'Copy not allowed here'; }
+  });
+
+  /* ----- Evidence mode ----- */
+  $('#evbtn').addEventListener('click', function () {
+    var on = document.body.classList.toggle('ev'); this.setAttribute('aria-pressed', on ? 'true' : 'false');
+    if (on && hasGsap && !calm) gsap.from('[data-ev]', { outlineColor: 'rgba(245,183,0,0)', duration: .5, stagger: .02 });
+  });
+
+  /* ----- Copy email ----- */
+  $('#copymail').addEventListener('click', function () {
+    var b = this;
+    try { navigator.clipboard.writeText('atichat.khanma2000@gmail.com').then(function () { b.textContent = 'Copied'; }, function () { b.textContent = 'Select the address to copy'; }); }
+    catch (e) { b.textContent = 'Select the address to copy'; }
+  });
+
+  /* ----- Site plan ----- */
+  function Plan(svg) {
+    var V = [[130,636],[130,600],[130,588],[130,572],[300,572],[300,550],[300,500],[325,485],[325,455],[300,430],[300,410],[300,380],[300,350],[300,325],[395,325],[395,300],[395,190]];
+    var STOP = [2, 7, 8, 11, 16, 16], DOOR = [1, 5, 10, 12, 15];
+    var cum = [0], i; for (i = 1; i < V.length; i++) cum[i] = cum[i - 1] + Math.hypot(V[i][0] - V[i - 1][0], V[i][1] - V[i - 1][1]);
+    var total = cum[cum.length - 1];
+    var q = function (s) { return Array.prototype.slice.call(svg.querySelectorAll(s)); };
+    var d = 'M' + V.map(function (p) { return p[0] + ' ' + p[1]; }).join('L');
+    q('.route, .route-on').forEach(function (p) { p.setAttribute('d', d); });
+    var on = q('.route-on')[0], dot = q('.dot')[0], ring = q('.dot-ring')[0];
+    on.style.strokeDasharray = total; 
+    function at(len) { for (var k = 1; k < V.length; k++) if (len <= cum[k] || k === V.length - 1) { var seg = cum[k] - cum[k - 1] || 1, u = Math.max(0, Math.min(1, (len - cum[k - 1]) / seg)); return [V[k - 1][0] + (V[k][0] - V[k - 1][0]) * u, V[k - 1][1] + (V[k][1] - V[k - 1][1]) * u]; } }
+    function set(f) {
+      f = Math.max(0, Math.min(5.999, f)); var n = Math.floor(f), u = f - n, e = Math.min(1, u / .6); e = e * e * (3 - 2 * e);
+      var a = n === 0 ? 0 : cum[STOP[n - 1]], b = cum[STOP[n]], len = a + (b - a) * e, p = at(len);
+      dot.setAttribute('cx', p[0]); dot.setAttribute('cy', p[1]); ring.setAttribute('cx', p[0]); ring.setAttribute('cy', p[1]); ring.setAttribute('r', 12 + 8 * Math.abs(Math.sin(f * 9)));
+      on.style.strokeDashoffset = total - len;
+      q('[data-z]').forEach(function (z) { z.classList.toggle('on', +z.getAttribute('data-z') === n + 1); });
+      q('.led[data-d]').forEach(function (l) { var c = cum[DOOR[+l.getAttribute('data-d')]]; l.classList.toggle('go', len > c - 26 && len < c + 26); });
+      q('.sig').forEach(function (s) { s.classList.toggle('on', n === 5); s.style.strokeDashoffset = -f * 90; });
+      return n;
+    }
+    function cams(t) { q('.cam-g').forEach(function (g, k) { g.setAttribute('transform', 'translate(' + g.getAttribute('data-x') + ' ' + g.getAttribute('data-y') + ') rotate(' + (+g.getAttribute('data-a') + 24 * Math.sin(t + k * 1.3)) + ')'); }); }
+    cams(0);
+    return { set: set, cams: cams };
+  }
+  var sec = $('#layers'), plan = Plan($('.plan', sec)), pstate = { f: 0 };
+  var layers = $$('.layer', sec), rail = $$('.lay-rail i', sec);
+  function setLayer(i) {
+    layers.forEach(function (l, k) { l.classList.toggle('on', k === i); });
+    rail.forEach(function (d, k) { d.classList.toggle('on', k <= i); });
+    $('#laynum').textContent = '0' + (i + 1);
+  }
+  function planGo(i) { setLayer(i); if (hasGsap) gsap.to(pstate, { f: i + .62, duration: 1.1, ease: 'power2.inOut', overwrite: true, onUpdate: function () { plan.set(pstate.f); } }); else plan.set(i + .62); }
+
+  /* ----- Motion ----- */
+  function heroIn() {
+    gsap.from('.hero h1 .ln > span', { yPercent: 105, duration: .9, ease: 'power4.out', stagger: .1 });
+    gsap.from('.hero .kicker, .hero .lede, .cam, .facts li', { opacity: 0, y: 22, duration: .7, ease: 'power2.out', stagger: .06, delay: .25 });
+  }
+  function startSite() {
+    document.body.classList.remove('locked'); document.body.classList.remove('sealed');
+    var g = $('#gate'); if (g) g.remove();
+    if (!hasGsap) return;
+    ScrollTrigger.refresh();
+  }
+
+  if (hasGsap && !calm) {
+    var mm = gsap.matchMedia();
+    mm.add('(min-width: 861px) and (min-height: 680px)', function () {
+      sec.classList.add('pin'); setLayer(0); plan.set(0);
+      var st = ScrollTrigger.create({ trigger: sec, start: 'top top', end: '+=' + 6 * 85 + '%', pin: true, scrub: .6,
+        onUpdate: function (self) { setLayer(plan.set(self.progress * 6)); } });
+      var hs = $$('.hsec');
+      hs.forEach(function (wk) {
+        var rl = $('.rail', wk), bar = $('.hprog i', wk); wk.classList.add('pin'); $('.rail-cue', wk).textContent = 'Keep scrolling. The cards move sideways.';
+        gsap.to(rl, { x: function () { return -(rl.scrollWidth - window.innerWidth); }, ease: 'none',
+          scrollTrigger: { trigger: rl, start: 'top 84px', end: function () { return '+=' + (rl.scrollWidth - window.innerWidth); }, pin: wk, scrub: .5, invalidateOnRefresh: true,
+            onUpdate: function (st) { bar.style.transform = 'scaleX(' + st.progress + ')'; } } });
+      });
+      return function () { sec.classList.remove('pin'); hs.forEach(function (w) { w.classList.remove('pin'); }); layers.forEach(function (l, k) { l.classList.toggle('on', k === 0); }); plan.set(0); };
+    });
+    mm.add('(max-width: 860px), (max-height: 679px)', function () {
+      plan.set(.62);
+      layers.forEach(function (l, i) { ScrollTrigger.create({ trigger: l, start: 'top 78%', end: 'bottom 78%', onToggle: function (st) { if (st.isActive) planGo(i); } }); });
+    });
+    $$('.sec-head, .chain, .tally, .soa, .audit-grid, .kinds, .ex-head, .grade, .policy, .risk, .pen-grid, .job, .side > div, .limits li, .out h2').forEach(function (el) {
+      gsap.from(el, { opacity: 0, y: 34, duration: .7, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 90%', once: true } });
+    });
+    gsap.utils.toArray('#tally b').forEach(function (b) {
+      var o = { v: 0 }, n = +b.getAttribute('data-n');
+      gsap.to(o, { v: n, duration: 1, ease: 'power1.out', scrollTrigger: { trigger: b, start: 'top 92%', once: true }, onUpdate: function () { b.textContent = Math.round(o.v); } });
+    });
+    gsap.utils.toArray('.hazard').forEach(function (h) { gsap.fromTo(h, { backgroundPositionX: 0 }, { backgroundPositionX: 160, ease: 'none', scrollTrigger: { trigger: h, start: 'top bottom', end: 'bottom top', scrub: true } }); });
+    var camt = { t: 0 }; gsap.to(camt, { t: 6.2832, duration: 10, repeat: -1, ease: 'none', onUpdate: function () { plan.cams(camt.t); } });
+    var links = $$('.bar nav a');
+    links.forEach(function (a) { var t = $(a.getAttribute('href')); if (t) ScrollTrigger.create({ trigger: t, start: 'top 55%', end: 'bottom 55%', onToggle: function (s) { if (s.isActive) links.forEach(function (x) { x.classList.toggle('on', x === a); }); } }); });
+  } else { $('.plan', sec).classList.add('static'); plan.set(5.99); }
+
+  /* ----- Loader sequence: the site stays sealed until every stage passes ----- */
+  var gate = $('#gate'), finished = false, items = $$('.g-list li', gate);
+  function finish() { if (finished) return; finished = true; startSite(); }
+  function unseal() { document.body.classList.remove('sealed'); var l = $('#glock'); if (l) { l.classList.add('open'); l.lastChild.textContent = 'Door released'; } }
+  function stage(li, passed) {
+    var st = $('.st', li), pt = li.classList.contains('pt');
+    if (!passed) { li.classList.add('act'); st.textContent = 'Check'; $('#gres').textContent = 'Loading · ' + li.getAttribute('data-stage'); }
+    else { st.textContent = pt ? 'Noted' : 'Pass'; li.classList.add(pt ? 'note' : 'done'); }
+  }
+  var fw = ['ISO/IEC 27001:2022', 'SOC 2 Type II', 'NZISM', 'NIST CSF 2.0', 'PCI DSS', 'NZ Privacy Act 2020', 'ISO/IEC 42001', 'Pen test rules of engagement', 'Internal audit'];
+  var trow = fw.map(function (f) { return '<span>' + f + '</span>'; }).join('');
+  $('.ticker-in', gate).innerHTML = trow + trow;
+  if (!hasGsap || calm) {
+    /* no motion: step through the stages plainly, then open */
+    var k = 0;
+    (function next() {
+      if (k > 0) stage(items[k - 1], true);
+      $('#gpct').textContent = Math.round(k / items.length * 100); $('#gbar').style.transform = 'scaleX(' + k / items.length + ')';
+      if (k < items.length) { stage(items[k], false); k++; setTimeout(next, 550); }
+      else { var r = $('#gres'); r.textContent = 'Verified · Authorised · Inducted'; r.classList.add('go'); unseal(); setTimeout(finish, 700); }
+    })();
+  } else {
+    gsap.to('.ticker-in', { xPercent: -50, duration: 22, repeat: -1, ease: 'none' });
+    var pct = { v: 0 }, D = 3.1;
+    var tl = gsap.timeline({ onComplete: finish });
+    tl.from('.gate-ui > *', { opacity: 0, y: 16, duration: .45, ease: 'power2.out', stagger: .08 });
+    tl.to(pct, { v: 100, duration: D, ease: 'none', onUpdate: function () { $('#gpct').textContent = Math.round(pct.v); } }, .3);
+    tl.to('#gbar', { scaleX: 1, duration: D, ease: 'none' }, .3);
+    items.forEach(function (li, i) {
+      var t0 = .3 + i * (D / 5);
+      tl.call(stage, [li, false], t0);
+      tl.call(stage, [li, true], t0 + D / 5 - .08);
+    });
+    tl.call(function () { var r = $('#gres'); r.textContent = 'Verified · Authorised · Inducted'; r.classList.add('go'); }, null, D + .35);
+    tl.to('.gate-ui', { opacity: 0, duration: .35, ease: 'power2.in' }, D + .8);
+    tl.fromTo('#gpass', { autoAlpha: 0, scale: .86, xPercent: -50, yPercent: -50, rotation: -4 }, { autoAlpha: 1, scale: 1, rotation: 0, duration: .45, ease: 'back.out(1.8)' }, D + 1);
+    tl.to('#gpass', { autoAlpha: 0, y: -40, duration: .3, ease: 'power2.in' }, D + 2);
+    tl.call(function () { unseal(); heroIn(); }, null, D + 2.2);
+    tl.to('#gate .leaf.l', { xPercent: -101, duration: .9, ease: 'power3.inOut' }, D + 2.25);
+    tl.to('#gate .leaf.r', { xPercent: 101, duration: .9, ease: 'power3.inOut' }, D + 2.25);
+    setTimeout(finish, 10000);
+  }
+})();
+</script>
+</body>
+</html>
